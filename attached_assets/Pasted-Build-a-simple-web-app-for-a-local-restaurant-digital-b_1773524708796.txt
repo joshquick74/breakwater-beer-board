@@ -1,0 +1,139 @@
+Build a simple web app for a local restaurant digital beer board.
+
+The app should replace their current Canva-based menu board with a dynamic system that looks visually similar but allows easy updates from a phone.
+
+The system has two parts:
+
+1. A public display page for a Fire TV
+2. A password-protected admin page for staff on mobile
+
+DISPLAY REQUIREMENTS
+
+Create a public page at /board designed for a portrait digital signage display (1080 x 1920).
+
+The TV will physically be in portrait orientation but Fire TV outputs landscape, so rotate the rendered UI 270 degrees using CSS so it fills the portrait display correctly.
+
+The board should:
+- be full screen
+- be easy to read from across a room
+- use large typography
+- have a clean restaurant-style menu layout
+- auto refresh every 30 seconds
+
+Each beer entry should support the following fields:
+- Tap Number
+- Beer Name
+- Brewery
+- Style
+- ABV %
+- Price
+- Availability toggle
+
+Unavailable beers should simply be hidden from the board.
+
+DESIGN REQUIREMENTS
+
+The layout should resemble a polished restaurant beer board similar to a Canva signage design.
+
+Include:
+- a header area for restaurant name or logo
+- a clean grid or list layout for beers
+- strong visual hierarchy so Beer Name is most prominent
+- readable spacing for TV viewing
+- graceful handling of long beer names
+
+BACKGROUND IMAGE + OVERLAY REQUIREMENTS
+
+Allow the admin to upload and use a custom background image for the board.
+
+Requirements:
+- Admin can upload a background image
+- Board uses the uploaded image as the full-screen background
+- Admin can enable or disable a single global semi-transparent overlay behind the content to improve readability
+- Admin can adjust the overlay opacity from 0 to 100%
+- The overlay applies to the overall content area only, not per row
+- Default should be a subtle dark transparent overlay
+
+FONT CUSTOMIZATION
+
+Allow the admin to choose any Google Font.
+
+Requirements:
+- Admin can enter the name of a Google Font
+- The board dynamically loads that font from Google Fonts
+- Admin can choose:
+  - header font
+  - beer list font
+
+ADMIN PAGE
+
+Create a mobile-friendly admin page at /admin.
+
+Protect the admin area with a simple password login using an environment variable.
+
+Admin capabilities:
+- add a beer
+- edit a beer
+- delete a beer
+- reorder beers
+- mark beer available/unavailable
+- upload or replace background image
+- toggle global background overlay
+- adjust overlay opacity percentage
+- change header font and body font using Google Fonts
+- change accent color
+- edit restaurant name/header text
+
+Admin interface should be extremely simple and optimized for phone use.
+
+DATABASE
+
+Use a simple persistent database.
+
+Create tables for:
+
+Beers
+- id
+- tap_number
+- beer_name
+- brewery
+- style
+- abv
+- price
+- available
+- position
+
+BoardSettings
+- header_title
+- google_font_header
+- google_font_body
+- accent_color
+- overlay_enabled
+- overlay_opacity
+- background_image_url
+
+Seed the database with 6 example beers.
+
+TECHNICAL REQUIREMENTS
+
+- Use a simple architecture suitable for a non-technical owner
+- Keep code readable and well commented
+- Ensure all admin edits update the database
+- Board page pulls data from database
+- Board auto-refreshes every 30 seconds
+- Ensure rotated portrait layout is centered and not clipped on Fire TV Silk browser
+- Make background image loading reliable and persistent
+
+NICE TO HAVE
+- drag-and-drop or move up/move down reordering
+- last updated timestamp on admin page
+- preview button for board
+
+At the end provide:
+- setup instructions
+- environment variable instructions
+- how to deploy
+- how to access /board and /admin
+- how to upload a background image
+- how to change fonts
+- how to change overlay opacity

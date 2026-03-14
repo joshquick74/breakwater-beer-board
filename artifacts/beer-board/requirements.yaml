@@ -1,0 +1,13 @@
+packages:
+  "framer-motion": "For page transitions and smooth list animations on the digital board"
+  "@hello-pangea/dnd": "For drag and drop reordering of beers in the admin panel"
+  "react-hook-form": "For form state management in the admin panel"
+  "@hookform/resolvers": "For Zod validation integration with react-hook-form"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility for intelligently merging tailwind classes"
+  "zod": "Schema validation for forms"
+
+notes:
+  - Base API url is /api
+  - The board view relies on CSS transforms (rotate -90deg on a 1920x1080 container) to emulate a 1080x1920 portrait display on a landscape signal device like a Fire TV
+  - Google fonts are dynamically injected based on API settings

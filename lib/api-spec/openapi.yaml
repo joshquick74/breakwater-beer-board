@@ -1,22 +1,28 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Beer Board API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: beers
+    description: Beer management
+  - name: settings
+    description: Board settings
+  - name: auth
+    description: Admin authentication
+  - name: upload
+    description: File uploads
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +30,187 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /beers:
+    get:
+      operationId: listBeers
+      tags: [beers]
+      summary: List all beers ordered by position
+      responses:
+        "200":
+          description: List of beers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Beer"
+    post:
+      operationId: createBeer
+      tags: [beers]
+      summary: Create a new beer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBeerBody"
+      responses:
+        "201":
+          description: Beer created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Beer"
+  /beers/{id}:
+    patch:
+      operationId: updateBeer
+      tags: [beers]
+      summary: Update a beer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBeerBody"
+      responses:
+        "200":
+          description: Beer updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Beer"
+        "404":
+          description: Beer not found
+    delete:
+      operationId: deleteBeer
+      tags: [beers]
+      summary: Delete a beer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Beer deleted
+        "404":
+          description: Beer not found
+  /beers/reorder:
+    patch:
+      operationId: reorderBeers
+      tags: [beers]
+      summary: Reorder beers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReorderBeersBody"
+      responses:
+        "200":
+          description: Beers reordered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                  - success
+  /settings:
+    get:
+      operationId: getSettings
+      tags: [settings]
+      summary: Get board settings
+      responses:
+        "200":
+          description: Board settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoardSettings"
+    patch:
+      operationId: updateSettings
+      tags: [settings]
+      summary: Update board settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSettingsBody"
+      responses:
+        "200":
+          description: Settings updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoardSettings"
+  /admin/login:
+    post:
+      operationId: adminLogin
+      tags: [auth]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginBody"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  token:
+                    type: string
+                required:
+                  - success
+                  - token
+        "401":
+          description: Invalid password
+  /upload/background:
+    post:
+      operationId: uploadBackground
+      tags: [upload]
+      summary: Upload background image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+              required:
+                - image
+      responses:
+        "200":
+          description: Background uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                required:
+                  - url
 components:
   schemas:
     HealthStatus:
@@ -33,4 +220,133 @@ components:
           type: string
       required:
         - status
-
+    Beer:
+      type: object
+      properties:
+        id:
+          type: integer
+        tapNumber:
+          type: integer
+        beerName:
+          type: string
+        brewery:
+          type: string
+        style:
+          type: string
+        abv:
+          type: string
+        price:
+          type: string
+        available:
+          type: boolean
+        position:
+          type: integer
+      required:
+        - id
+        - tapNumber
+        - beerName
+        - brewery
+        - style
+        - abv
+        - price
+        - available
+        - position
+    CreateBeerBody:
+      type: object
+      properties:
+        tapNumber:
+          type: integer
+        beerName:
+          type: string
+        brewery:
+          type: string
+        style:
+          type: string
+        abv:
+          type: string
+        price:
+          type: string
+        available:
+          type: boolean
+      required:
+        - tapNumber
+        - beerName
+        - brewery
+        - style
+        - abv
+        - price
+    UpdateBeerBody:
+      type: object
+      properties:
+        tapNumber:
+          type: integer
+        beerName:
+          type: string
+        brewery:
+          type: string
+        style:
+          type: string
+        abv:
+          type: string
+        price:
+          type: string
+        available:
+          type: boolean
+    ReorderBeersBody:
+      type: object
+      properties:
+        beerIds:
+          type: array
+          items:
+            type: integer
+      required:
+        - beerIds
+    BoardSettings:
+      type: object
+      properties:
+        id:
+          type: integer
+        headerTitle:
+          type: string
+        googleFontHeader:
+          type: string
+        googleFontBody:
+          type: string
+        accentColor:
+          type: string
+        overlayEnabled:
+          type: boolean
+        overlayOpacity:
+          type: integer
+        backgroundImageUrl:
+          type: ["string", "null"]
+      required:
+        - id
+        - headerTitle
+        - googleFontHeader
+        - googleFontBody
+        - accentColor
+        - overlayEnabled
+        - overlayOpacity
+    UpdateSettingsBody:
+      type: object
+      properties:
+        headerTitle:
+          type: string
+        googleFontHeader:
+          type: string
+        googleFontBody:
+          type: string
+        accentColor:
+          type: string
+        overlayEnabled:
+          type: boolean
+        overlayOpacity:
+          type: integer
+    LoginBody:
+      type: object
+      properties:
+        password:
+          type: string
+      required:
+        - password
