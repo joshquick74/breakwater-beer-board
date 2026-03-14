@@ -17,25 +17,58 @@ const queryClient = new QueryClient({
 });
 
 function Home() {
+  const base = import.meta.env.BASE_URL;
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background text-foreground space-y-6">
-      <div className="text-center max-w-lg mx-auto space-y-4">
-        <h1 className="text-4xl font-extrabold tracking-tight">Digital Beer Board</h1>
-        <p className="text-lg text-muted-foreground">Select a destination to continue</p>
-      </div>
-      <div className="flex gap-4">
-        <a 
-          href="/board" 
-          className="px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-xl shadow-lg hover:-translate-y-1 transition-transform"
-        >
-          View Board
-        </a>
-        <a 
-          href="/admin" 
-          className="px-8 py-4 bg-secondary text-secondary-foreground font-semibold rounded-xl shadow-lg hover:-translate-y-1 transition-transform"
-        >
-          Admin Login
-        </a>
+    <div
+      className="min-h-screen w-full flex flex-col items-center justify-center text-white relative overflow-hidden"
+      style={{
+        backgroundImage: `url(${base}charred-wood-bg.png)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="absolute inset-0 bg-black/50" />
+
+      <div className="relative z-10 flex flex-col items-center text-center px-6 space-y-8">
+        <img
+          src={`${base}breakwater-logo.png`}
+          alt="Breakwater Logo"
+          className="w-48 h-48 object-contain drop-shadow-2xl"
+        />
+
+        <div className="space-y-3">
+          <h1
+            className="text-5xl md:text-6xl font-black tracking-tight uppercase"
+            style={{
+              textShadow: "0 2px 20px rgba(0,0,0,0.8), 0 0 40px rgba(245,158,11,0.3)",
+            }}
+          >
+            Breakwater's
+          </h1>
+          <h2
+            className="text-4xl md:text-5xl font-extrabold tracking-widest uppercase text-amber-400"
+            style={{
+              textShadow: "0 2px 15px rgba(245,158,11,0.5), 0 0 30px rgba(245,158,11,0.2)",
+            }}
+          >
+            Bad Ass Beer Board
+          </h2>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-4 pt-4">
+          <a
+            href="/board"
+            className="px-10 py-4 bg-amber-500 hover:bg-amber-400 text-black font-bold text-lg rounded-xl shadow-lg hover:-translate-y-1 transition-all uppercase tracking-wide"
+          >
+            View Board
+          </a>
+          <a
+            href="/admin"
+            className="px-10 py-4 border-2 border-amber-500/60 hover:border-amber-400 text-amber-400 hover:text-amber-300 font-bold text-lg rounded-xl shadow-lg hover:-translate-y-1 transition-all uppercase tracking-wide backdrop-blur-sm"
+          >
+            Admin Login
+          </a>
+        </div>
       </div>
     </div>
   );
