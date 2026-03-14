@@ -102,6 +102,7 @@ export const GetSettingsResponse = zod.object({
   overlayEnabled: zod.boolean(),
   overlayOpacity: zod.number(),
   backgroundImageUrl: zod.string().nullish(),
+  logoSizePercent: zod.number(),
 });
 
 /**
@@ -114,6 +115,7 @@ export const UpdateSettingsBody = zod.object({
   accentColor: zod.string().optional(),
   overlayEnabled: zod.boolean().optional(),
   overlayOpacity: zod.number().optional(),
+  logoSizePercent: zod.number().optional(),
 });
 
 export const UpdateSettingsResponse = zod.object({
@@ -125,6 +127,7 @@ export const UpdateSettingsResponse = zod.object({
   overlayEnabled: zod.boolean(),
   overlayOpacity: zod.number(),
   backgroundImageUrl: zod.string().nullish(),
+  logoSizePercent: zod.number(),
 });
 
 /**

@@ -89,18 +89,17 @@ export default function Board() {
             marginBottom: 30,
             flexShrink: 0,
           }}>
-            <h1 style={{
-              fontFamily: headerFont,
-              fontSize: 72,
-              fontWeight: 900,
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-              lineHeight: 1,
-              textShadow: "0 4px 20px rgba(0,0,0,0.8)",
-              margin: 0,
-            }}>
-              {settings?.headerTitle || "On Tap"}
-            </h1>
+            <img
+              src={`${import.meta.env.BASE_URL}breakwater-logo.png`}
+              alt={settings?.headerTitle || "Logo"}
+              style={{
+                width: `${(settings?.logoSizePercent ?? 100) * 2.5}px`,
+                height: "auto",
+                margin: "0 auto",
+                display: "block",
+                filter: "drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
+              }}
+            />
             <div style={{
               height: 3,
               background: `linear-gradient(to right, transparent, ${accentColor}, transparent)`,

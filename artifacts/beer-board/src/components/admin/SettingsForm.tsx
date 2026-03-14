@@ -21,6 +21,7 @@ const settingsSchema = z.object({
   accentColor: z.string().min(1, "Accent color is required"),
   overlayEnabled: z.boolean(),
   overlayOpacity: z.number().min(0).max(100),
+  logoSizePercent: z.number().min(10).max(200),
 });
 
 type SettingsFormValues = z.infer<typeof settingsSchema>;
@@ -43,6 +44,7 @@ export function SettingsForm() {
       accentColor: "#f59e0b",
       overlayEnabled: true,
       overlayOpacity: 60,
+      logoSizePercent: 100,
     },
   });
 
@@ -55,6 +57,7 @@ export function SettingsForm() {
         accentColor: settings.accentColor,
         overlayEnabled: settings.overlayEnabled,
         overlayOpacity: settings.overlayOpacity,
+        logoSizePercent: settings.logoSizePercent,
       });
     }
   }, [settings, form]);
@@ -173,6 +176,26 @@ export function SettingsForm() {
                 <Label htmlFor="googleFontBody">Body Google Font Name</Label>
                 <Input id="googleFontBody" {...form.register("googleFontBody")} placeholder="e.g. Open Sans" />
               </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold border-b border-border/50 pb-4">Logo Size</h3>
+            <p className="text-sm text-muted-foreground -mt-2">
+              Adjust the size of the logo displayed on the board header.
+            </p>
+            <div>
+              <div className="flex justify-between mb-4">
+                <Label>Logo Size</Label>
+                <span className="font-mono">{form.watch("logoSizePercent")}%</span>
+              </div>
+              <Slider
+                value={[form.watch("logoSizePercent")]}
+                min={10}
+                max={200}
+                step={5}
+                onValueChange={([val]) => form.setValue("logoSizePercent", val)}
+              />
             </div>
           </div>
 

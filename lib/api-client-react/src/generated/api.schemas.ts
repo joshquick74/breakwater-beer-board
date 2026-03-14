@@ -55,6 +55,7 @@ export interface BoardSettings {
   overlayOpacity: number;
   /** @nullable */
   backgroundImageUrl?: string | null;
+  logoSizePercent: number;
 }
 
 export interface UpdateSettingsBody {
@@ -64,6 +65,7 @@ export interface UpdateSettingsBody {
   accentColor?: string;
   overlayEnabled?: boolean;
   overlayOpacity?: number;
+  logoSizePercent?: number;
 }
 
 export interface LoginBody {

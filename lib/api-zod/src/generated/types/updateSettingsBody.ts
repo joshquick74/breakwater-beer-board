@@ -13,4 +13,5 @@ export interface UpdateSettingsBody {
   accentColor?: string;
   overlayEnabled?: boolean;
   overlayOpacity?: number;
+  logoSizePercent?: number;
 }

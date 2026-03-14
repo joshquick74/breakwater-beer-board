@@ -11,6 +11,7 @@ export const boardSettingsTable = pgTable("board_settings", {
   overlayEnabled: boolean("overlay_enabled").notNull().default(true),
   overlayOpacity: integer("overlay_opacity").notNull().default(60),
   backgroundImageUrl: text("background_image_url"),
+  logoSizePercent: integer("logo_size_percent").notNull().default(100),
 });
 
 export const insertBoardSettingsSchema = createInsertSchema(boardSettingsTable).omit({ id: true });

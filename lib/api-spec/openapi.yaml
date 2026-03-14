@@ -320,6 +320,8 @@ components:
           type: integer
         backgroundImageUrl:
           type: ["string", "null"]
+        logoSizePercent:
+          type: integer
       required:
         - id
         - headerTitle
@@ -328,6 +330,7 @@ components:
         - accentColor
         - overlayEnabled
         - overlayOpacity
+        - logoSizePercent
     UpdateSettingsBody:
       type: object
       properties:
@@ -342,6 +345,8 @@ components:
         overlayEnabled:
           type: boolean
         overlayOpacity:
+          type: integer
+        logoSizePercent:
           type: integer
     LoginBody:
       type: object
