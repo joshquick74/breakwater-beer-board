@@ -86,7 +86,7 @@ export function SettingsForm() {
   const onSubmit = async (data: SettingsFormValues) => {
     setIsSubmitting(true);
     try {
-      await updateSettings({ data }, { request: { headers: getAuthHeaders() } });
+      await updateSettings({ data });
       queryClient.invalidateQueries({ queryKey: getGetSettingsQueryKey() });
       toast({ title: "Success", description: "Settings updated successfully", variant: "default" });
     } catch (error) {

@@ -6,7 +6,6 @@ import { Card } from "@/components/ui/card";
 import { BeerForm } from "./BeerForm";
 import { useListBeers, useDeleteBeer, useReorderBeers, getListBeersQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { getAuthHeaders } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import type { Beer } from "@workspace/api-client-react";
 
@@ -40,7 +39,7 @@ export function BeerList() {
     try {
       await reorderBeers({
         data: { beerIds: items.map(b => b.id) }
-      }, { request: { headers: getAuthHeaders() } });
+      });
       queryClient.invalidateQueries({ queryKey: getListBeersQueryKey() });
     } catch (error) {
       toast({ title: "Error", description: "Failed to reorder beers", variant: "destructive" });
@@ -53,7 +52,7 @@ export function BeerList() {
   const handleDelete = async (id: number) => {
     if (!confirm("Are you sure you want to delete this beer?")) return;
     try {
-      await deleteBeer({ id }, { request: { headers: getAuthHeaders() } });
+      await deleteBeer({ id });
       queryClient.invalidateQueries({ queryKey: getListBeersQueryKey() });
       toast({ title: "Deleted", description: "Beer removed successfully", variant: "default" });
     } catch (error) {

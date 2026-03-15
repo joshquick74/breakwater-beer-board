@@ -16,7 +16,6 @@ import {
 import { useCreateBeer, useUpdateBeer } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getListBeersQueryKey } from "@workspace/api-client-react";
-import { getAuthHeaders } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import type { Beer } from "@workspace/api-client-react";
 
@@ -90,12 +89,12 @@ export function BeerForm({ open, onOpenChange, beer }: BeerFormProps) {
         await updateBeer({
           id: beer.id,
           data,
-        }, { request: { headers: getAuthHeaders() } });
+        });
         toast({ title: "Success", description: "Beer updated successfully", variant: "default" });
       } else {
         await createBeer({
           data,
-        }, { request: { headers: getAuthHeaders() } });
+        });
         toast({ title: "Success", description: "Beer created successfully", variant: "default" });
       }
       queryClient.invalidateQueries({ queryKey: getListBeersQueryKey() });
