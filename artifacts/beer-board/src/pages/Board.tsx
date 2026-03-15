@@ -157,10 +157,10 @@ export default function Board() {
                       {beer.brewery}
                     </span>
                     <span style={{
+                      fontFamily: `"${breweryFont}", sans-serif`,
                       fontSize: 38,
                       fontWeight: 700,
-                      opacity: 0.4,
-                      color: textColor,
+                      color: breweryColor,
                     }}>
                       -
                     </span>
@@ -192,7 +192,7 @@ export default function Board() {
                     }}>
                       {beer.style}
                     </span>
-                    <span style={{ fontSize: 24, opacity: 0.4, color: textColor }}>-</span>
+                    <span style={{ fontFamily: `"${styleFont}", sans-serif`, fontSize: 24, color: styleColor }}>-</span>
                     <span style={{
                       fontFamily: `"${abvFont}", sans-serif`,
                       fontSize: 24,
