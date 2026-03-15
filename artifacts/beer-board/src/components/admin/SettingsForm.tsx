@@ -13,8 +13,15 @@ import { useGetSettings, useUpdateSettings, getGetSettingsQueryKey } from "@work
 import { useQueryClient } from "@tanstack/react-query";
 import { getAuthHeaders } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, Image as ImageIcon, ImagePlus } from "lucide-react";
+import { Upload, Image as ImageIcon, ImagePlus, Monitor, RotateCw } from "lucide-react";
 import { useDynamicFonts } from "@/hooks/use-fonts";
+
+const ROTATION_OPTIONS = [
+  { value: 0, label: "0° — Landscape", description: "Standard widescreen (HDMI default)" },
+  { value: 90, label: "90° — Portrait Right", description: "TV rotated clockwise" },
+  { value: 180, label: "180° — Landscape Flipped", description: "TV mounted upside-down" },
+  { value: 270, label: "270° — Portrait Left", description: "TV rotated counter-clockwise" },
+] as const;
 
 const COMMON_FONTS = [
   "Oswald",
@@ -55,6 +62,7 @@ const settingsSchema = z.object({
   overlayEnabled: z.boolean(),
   overlayOpacity: z.number().min(0).max(100),
   logoSizePercent: z.number().min(10).max(200),
+  boardRotation: z.number(),
   brewery: elementStyleSchema,
   beerName: elementStyleSchema,
   style: elementStyleSchema,
@@ -163,6 +171,7 @@ export function SettingsForm() {
       overlayEnabled: true,
       overlayOpacity: 60,
       logoSizePercent: 100,
+      boardRotation: 270,
       brewery: { font: defaultFont, color: defaultColor },
       beerName: { font: defaultFont, color: defaultColor },
       style: { font: defaultFont, color: defaultColor },
@@ -179,6 +188,7 @@ export function SettingsForm() {
         overlayEnabled: settings.overlayEnabled,
         overlayOpacity: settings.overlayOpacity,
         logoSizePercent: settings.logoSizePercent,
+        boardRotation: settings.boardRotation ?? 270,
         brewery: { font: settings.breweryFont || fallbackFont, color: settings.breweryColor || fallbackColor },
         beerName: { font: settings.beerNameFont || fallbackFont, color: settings.beerNameColor || fallbackColor },
         style: { font: settings.styleFont || fallbackFont, color: settings.styleColor || fallbackColor },
@@ -188,7 +198,7 @@ export function SettingsForm() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    settings?.overlayEnabled, settings?.overlayOpacity, settings?.logoSizePercent,
+    settings?.overlayEnabled, settings?.overlayOpacity, settings?.logoSizePercent, settings?.boardRotation,
     settings?.breweryFont, settings?.breweryColor,
     settings?.beerNameFont, settings?.beerNameColor,
     settings?.styleFont, settings?.styleColor,
@@ -205,6 +215,7 @@ export function SettingsForm() {
           overlayEnabled: data.overlayEnabled,
           overlayOpacity: data.overlayOpacity,
           logoSizePercent: data.logoSizePercent,
+          boardRotation: data.boardRotation,
           breweryFont: data.brewery.font,
           breweryColor: data.brewery.color,
           beerNameFont: data.beerName.font,
@@ -393,6 +404,70 @@ export function SettingsForm() {
                   onColorChange={(color) => form.setValue(`${key}.color` as any, color)}
                 />
               ))}
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold border-b border-border/50 pb-4 flex items-center gap-2">
+              <RotateCw className="w-5 h-5 text-primary" />
+              Board Orientation
+            </h3>
+            <p className="text-sm text-muted-foreground -mt-2">
+              Set how the board content is rotated to match your TV's physical mounting orientation.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {ROTATION_OPTIONS.map((opt) => {
+                const isSelected = form.watch("boardRotation") === opt.value;
+                const isPortrait = opt.value === 90 || opt.value === 270;
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => form.setValue("boardRotation", opt.value)}
+                    className={`relative flex flex-col items-center gap-3 p-4 rounded-xl border-2 transition-all ${
+                      isSelected
+                        ? "border-primary bg-primary/10 shadow-md"
+                        : "border-border hover:border-primary/50 hover:bg-muted/50"
+                    }`}
+                  >
+                    <div className="relative w-16 h-16 flex items-center justify-center">
+                      <div
+                        className={`border-2 rounded-sm flex items-center justify-center transition-all ${
+                          isSelected ? "border-primary bg-primary/20" : "border-muted-foreground/40 bg-muted/30"
+                        }`}
+                        style={{
+                          width: isPortrait ? 28 : 48,
+                          height: isPortrait ? 48 : 28,
+                        }}
+                      >
+                        <div className="flex flex-col items-center gap-[2px]">
+                          {(isPortrait ? [16, 12, 14, 10] : [20, 16]).map((w, i) => (
+                            <div
+                              key={i}
+                              className={`rounded-sm ${isSelected ? "bg-primary" : "bg-muted-foreground/40"}`}
+                              style={{ width: w, height: 2 }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      {opt.value === 180 && (
+                        <div className="absolute -top-1 left-1/2 -translate-x-1/2 text-[8px] font-bold text-muted-foreground/60">▼</div>
+                      )}
+                    </div>
+                    <div className="text-center">
+                      <div className={`text-xs font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                        {opt.value}°
+                      </div>
+                      <div className="text-[10px] text-muted-foreground leading-tight mt-0.5">
+                        {opt.description}
+                      </div>
+                    </div>
+                    {isSelected && (
+                      <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

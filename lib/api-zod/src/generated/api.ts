@@ -115,6 +115,12 @@ export const GetSettingsResponse = zod.object({
   abvColor: zod.string(),
   priceFont: zod.string(),
   priceColor: zod.string(),
+  boardRotation: zod.union([
+    zod.literal(0),
+    zod.literal(90),
+    zod.literal(180),
+    zod.literal(270),
+  ]),
 });
 
 /**
@@ -139,6 +145,14 @@ export const UpdateSettingsBody = zod.object({
   abvColor: zod.string().optional(),
   priceFont: zod.string().optional(),
   priceColor: zod.string().optional(),
+  boardRotation: zod
+    .union([
+      zod.literal(0),
+      zod.literal(90),
+      zod.literal(180),
+      zod.literal(270),
+    ])
+    .optional(),
 });
 
 export const UpdateSettingsResponse = zod.object({
@@ -163,6 +177,12 @@ export const UpdateSettingsResponse = zod.object({
   abvColor: zod.string(),
   priceFont: zod.string(),
   priceColor: zod.string(),
+  boardRotation: zod.union([
+    zod.literal(0),
+    zod.literal(90),
+    zod.literal(180),
+    zod.literal(270),
+  ]),
 });
 
 /**

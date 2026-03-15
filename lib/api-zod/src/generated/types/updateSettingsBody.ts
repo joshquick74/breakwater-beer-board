@@ -5,6 +5,7 @@
  * Beer Board API
  * OpenAPI spec version: 0.1.0
  */
+import type { UpdateSettingsBodyBoardRotation } from "./updateSettingsBodyBoardRotation";
 
 export interface UpdateSettingsBody {
   headerTitle?: string;
@@ -25,4 +26,5 @@ export interface UpdateSettingsBody {
   abvColor?: string;
   priceFont?: string;
   priceColor?: string;
+  boardRotation?: UpdateSettingsBodyBoardRotation;
 }

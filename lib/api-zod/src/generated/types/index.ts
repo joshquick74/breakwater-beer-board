@@ -9,6 +9,7 @@
 export * from "./adminLogin200";
 export * from "./beer";
 export * from "./boardSettings";
+export * from "./boardSettingsBoardRotation";
 export * from "./createBeerBody";
 export * from "./healthStatus";
 export * from "./loginBody";
@@ -16,6 +17,7 @@ export * from "./reorderBeers200";
 export * from "./reorderBeersBody";
 export * from "./updateBeerBody";
 export * from "./updateSettingsBody";
+export * from "./updateSettingsBodyBoardRotation";
 export * from "./uploadBackground200";
 export * from "./uploadBackgroundBody";
 export * from "./uploadLogo200";

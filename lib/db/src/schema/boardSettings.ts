@@ -24,6 +24,7 @@ export const boardSettingsTable = pgTable("board_settings", {
   abvColor: text("abv_color").notNull().default("#ffffff"),
   priceFont: text("price_font").notNull().default("Open Sans"),
   priceColor: text("price_color").notNull().default("#ffffff"),
+  boardRotation: integer("board_rotation").notNull().default(270),
 });
 
 export const insertBoardSettingsSchema = createInsertSchema(boardSettingsTable).omit({ id: true });

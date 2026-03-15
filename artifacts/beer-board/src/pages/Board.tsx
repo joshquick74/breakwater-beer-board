@@ -31,6 +31,11 @@ export default function Board() {
 
   const textColor = settings?.textColor || "#ffffff";
   const bgImage = settings?.backgroundImageUrl || undefined;
+  const boardRotation = settings?.boardRotation ?? 270;
+
+  const isRotated = boardRotation === 90 || boardRotation === 270;
+  const boardW = isRotated ? 1080 : 1920;
+  const boardH = isRotated ? 1920 : 1080;
 
   return (
     <div style={{
@@ -43,15 +48,15 @@ export default function Board() {
       overflow: "hidden",
     }}>
       <div style={{
-        width: 1080,
-        height: 1920,
-        transform: "rotate(-90deg)",
+        width: boardW,
+        height: boardH,
+        transform: boardRotation === 0 ? "none" : `rotate(-${boardRotation}deg)`,
         transformOrigin: "center center",
         position: "absolute",
         top: "50%",
         left: "50%",
-        marginTop: -960,
-        marginLeft: -540,
+        marginTop: -(boardH / 2),
+        marginLeft: -(boardW / 2),
         overflow: "hidden",
         color: textColor,
       }}>

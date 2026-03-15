@@ -375,6 +375,9 @@ components:
           type: string
         priceColor:
           type: string
+        boardRotation:
+          type: integer
+          enum: [0, 90, 180, 270]
       required:
         - id
         - headerTitle
@@ -395,6 +398,7 @@ components:
         - abvColor
         - priceFont
         - priceColor
+        - boardRotation
     UpdateSettingsBody:
       type: object
       properties:
@@ -434,6 +438,9 @@ components:
           type: string
         priceColor:
           type: string
+        boardRotation:
+          type: integer
+          enum: [0, 90, 180, 270]
     LoginBody:
       type: object
       properties:

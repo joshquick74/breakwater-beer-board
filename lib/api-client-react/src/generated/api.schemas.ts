@@ -45,6 +45,16 @@ export interface ReorderBeersBody {
   beerIds: number[];
 }
 
+export type BoardSettingsBoardRotation =
+  (typeof BoardSettingsBoardRotation)[keyof typeof BoardSettingsBoardRotation];
+
+export const BoardSettingsBoardRotation = {
+  NUMBER_0: 0,
+  NUMBER_90: 90,
+  NUMBER_180: 180,
+  NUMBER_270: 270,
+} as const;
+
 export interface BoardSettings {
   id: number;
   headerTitle: string;
@@ -69,7 +79,18 @@ export interface BoardSettings {
   abvColor: string;
   priceFont: string;
   priceColor: string;
+  boardRotation: BoardSettingsBoardRotation;
 }
+
+export type UpdateSettingsBodyBoardRotation =
+  (typeof UpdateSettingsBodyBoardRotation)[keyof typeof UpdateSettingsBodyBoardRotation];
+
+export const UpdateSettingsBodyBoardRotation = {
+  NUMBER_0: 0,
+  NUMBER_90: 90,
+  NUMBER_180: 180,
+  NUMBER_270: 270,
+} as const;
 
 export interface UpdateSettingsBody {
   headerTitle?: string;
@@ -90,6 +111,7 @@ export interface UpdateSettingsBody {
   abvColor?: string;
   priceFont?: string;
   priceColor?: string;
+  boardRotation?: UpdateSettingsBodyBoardRotation;
 }
 
 export interface LoginBody {
