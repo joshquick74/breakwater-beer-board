@@ -283,7 +283,15 @@ export async function customFetch<T = unknown>(
     throw new TypeError(`customFetch: ${method} requests cannot have a body.`);
   }
 
-  const headers = mergeHeaders(isRequest(input) ? input.headers : undefined, headersInit);
+  const authHeaders: HeadersInit = {};
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("beer_admin_token");
+    if (token) {
+      (authHeaders as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+    }
+  }
+
+  const headers = mergeHeaders(isRequest(input) ? input.headers : undefined, authHeaders, headersInit);
 
   if (
     typeof init.body === "string" &&
