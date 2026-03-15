@@ -102,7 +102,7 @@ export function BeerList() {
                       </div>
                       
                       <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-bold shrink-0">
-                        {beer.tapNumber}
+                        {index + 1}
                       </div>
 
                       <div className="flex-1 min-w-0">
