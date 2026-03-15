@@ -270,11 +270,16 @@ export default function ApiDocs() {
               response={`{
   "id": 1,
   "headerTitle": "Breakwater Barbecue",
+  "googleFontHeader": "Oswald",
+  "googleFontBody": "Open Sans",
+  "accentColor": "#2d6a4f",
+  "textColor": "#ffffff",
   "overlayEnabled": true,
   "overlayOpacity": 60,
   "backgroundImageUrl": "/api/uploads/background.png",
   "logoImageUrl": null,
   "logoSizePercent": 100,
+  "boardRotation": 270,
   "breweryFont": "Oswald",
   "breweryColor": "#ffffff",
   "beerNameFont": "Oswald",
@@ -299,12 +304,19 @@ export default function ApiDocs() {
   "breweryColor": "#ffffff",
   "beerNameColor": "#f59e0b",
   "priceFont": "Bebas Neue",
-  "overlayOpacity": 50
-}`}
+  "overlayOpacity": 50,
+  "boardRotation": 0
+}
+
+// boardRotation accepts: 0, 90, 180, 270
+//   0   = Landscape (standard widescreen)
+//   90  = Portrait (TV rotated clockwise)
+//   180 = Landscape flipped (TV upside-down)
+//   270 = Portrait (TV rotated counter-clockwise)`}
               curl={`curl -X PATCH ${BASE_URL}/api/settings \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer YOUR_TOKEN" \\
-  -d '{"breweryFont": "Oswald", "beerNameColor": "#f59e0b"}'`}
+  -d '{"boardRotation": 0, "breweryFont": "Oswald", "beerNameColor": "#f59e0b"}'`}
             />
           </div>
         </section>
