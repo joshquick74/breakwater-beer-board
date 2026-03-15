@@ -12,10 +12,10 @@ import { useGetSettings, useUpdateSettings, getGetSettingsQueryKey } from "@work
 import { useQueryClient } from "@tanstack/react-query";
 import { getAuthHeaders } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, Image as ImageIcon } from "lucide-react";
+import { Upload, Image as ImageIcon, ImagePlus } from "lucide-react";
 
 const settingsSchema = z.object({
-  headerTitle: z.string().min(1, "Header title is required"),
+  headerTitle: z.string().optional(),
   googleFontHeader: z.string().min(1, "Header font is required"),
   googleFontBody: z.string().min(1, "Body font is required"),
   accentColor: z.string().min(1, "Accent color is required"),
@@ -33,7 +33,9 @@ export function SettingsForm() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
@@ -100,10 +102,74 @@ export function SettingsForm() {
     }
   };
 
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingLogo(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const headers = getAuthHeaders();
+      const res = await fetch("/api/upload/logo", {
+        method: "POST",
+        headers,
+        body: formData,
+      });
+      if (!res.ok) throw new Error("Upload failed");
+      queryClient.invalidateQueries({ queryKey: getGetSettingsQueryKey() });
+      toast({ title: "Success", description: "Logo uploaded successfully", variant: "default" });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to upload logo", variant: "destructive" });
+    } finally {
+      setIsUploadingLogo(false);
+      if (logoInputRef.current) logoInputRef.current.value = '';
+    }
+  };
+
   if (isLoading) return <div className="p-8 text-center text-muted-foreground animate-pulse">Loading settings...</div>;
 
   return (
     <div className="space-y-8">
+      <Card className="p-6">
+        <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+          <ImagePlus className="w-5 h-5 text-primary" />
+          Board Logo
+        </h3>
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          <div className="w-full md:w-1/3 aspect-square bg-secondary rounded-xl overflow-hidden relative border border-border shadow-inner flex items-center justify-center">
+            {settings?.logoImageUrl ? (
+              <img src={settings.logoImageUrl} alt="Board logo" className="w-full h-full object-contain p-4" />
+            ) : (
+              <div className="flex flex-col items-center justify-center text-muted-foreground">
+                <ImagePlus className="w-10 h-10 mb-2 opacity-50" />
+                <span className="text-sm font-medium">No Logo Set</span>
+              </div>
+            )}
+          </div>
+          <div className="flex-1 space-y-4 w-full">
+            <p className="text-sm text-muted-foreground">
+              Upload your restaurant logo (PNG with transparent background recommended). This replaces the header text on the board.
+            </p>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              ref={logoInputRef}
+              onChange={handleLogoUpload}
+            />
+            <Button
+              variant="outline"
+              onClick={() => logoInputRef.current?.click()}
+              disabled={isUploadingLogo}
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              {isUploadingLogo ? "Uploading..." : "Upload Logo"}
+            </Button>
+          </div>
+        </div>
+      </Card>
+
       <Card className="p-6">
         <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
           <ImageIcon className="w-5 h-5 text-primary" />
@@ -148,10 +214,6 @@ export function SettingsForm() {
           <div className="space-y-6">
             <h3 className="text-xl font-bold border-b border-border/50 pb-4">Typography & Branding</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="headerTitle">Header Title (Restaurant Name)</Label>
-                <Input id="headerTitle" {...form.register("headerTitle")} />
-              </div>
               <div className="space-y-2">
                 <Label htmlFor="accentColor">Accent Color</Label>
                 <div className="flex gap-3">

@@ -90,7 +90,7 @@ export default function Board() {
             flexShrink: 0,
           }}>
             <img
-              src={`${import.meta.env.BASE_URL}breakwater-logo.png`}
+              src={settings?.logoImageUrl || `${import.meta.env.BASE_URL}breakwater-logo.png`}
               alt={settings?.headerTitle || "Logo"}
               style={{
                 width: `${(settings?.logoSizePercent ?? 100) * 2.5}px`,

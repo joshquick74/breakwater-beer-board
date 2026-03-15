@@ -29,6 +29,8 @@ import type {
   UpdateSettingsBody,
   UploadBackground200,
   UploadBackgroundBody,
+  UploadLogo200,
+  UploadLogoBody,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -856,4 +858,92 @@ export const useUploadBackground = <
   TContext
 > => {
   return useMutation(getUploadBackgroundMutationOptions(options));
+};
+
+/**
+ * @summary Upload logo image
+ */
+export const getUploadLogoUrl = () => {
+  return `/api/upload/logo`;
+};
+
+export const uploadLogo = async (
+  uploadLogoBody: UploadLogoBody,
+  options?: RequestInit,
+): Promise<UploadLogo200> => {
+  const formData = new FormData();
+  formData.append(`image`, uploadLogoBody.image);
+
+  return customFetch<UploadLogo200>(getUploadLogoUrl(), {
+    ...options,
+    method: "POST",
+    body: formData,
+  });
+};
+
+export const getUploadLogoMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof uploadLogo>>,
+    TError,
+    { data: BodyType<UploadLogoBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof uploadLogo>>,
+  TError,
+  { data: BodyType<UploadLogoBody> },
+  TContext
+> => {
+  const mutationKey = ["uploadLogo"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof uploadLogo>>,
+    { data: BodyType<UploadLogoBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return uploadLogo(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UploadLogoMutationResult = NonNullable<
+  Awaited<ReturnType<typeof uploadLogo>>
+>;
+export type UploadLogoMutationBody = BodyType<UploadLogoBody>;
+export type UploadLogoMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Upload logo image
+ */
+export const useUploadLogo = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof uploadLogo>>,
+    TError,
+    { data: BodyType<UploadLogoBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof uploadLogo>>,
+  TError,
+  { data: BodyType<UploadLogoBody> },
+  TContext
+> => {
+  return useMutation(getUploadLogoMutationOptions(options));
 };

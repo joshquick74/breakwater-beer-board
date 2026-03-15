@@ -102,6 +102,7 @@ export const GetSettingsResponse = zod.object({
   overlayEnabled: zod.boolean(),
   overlayOpacity: zod.number(),
   backgroundImageUrl: zod.string().nullish(),
+  logoImageUrl: zod.string().nullish(),
   logoSizePercent: zod.number(),
 });
 
@@ -127,6 +128,7 @@ export const UpdateSettingsResponse = zod.object({
   overlayEnabled: zod.boolean(),
   overlayOpacity: zod.number(),
   backgroundImageUrl: zod.string().nullish(),
+  logoImageUrl: zod.string().nullish(),
   logoSizePercent: zod.number(),
 });
 
@@ -150,5 +152,16 @@ export const UploadBackgroundBody = zod.object({
 });
 
 export const UploadBackgroundResponse = zod.object({
+  url: zod.string(),
+});
+
+/**
+ * @summary Upload logo image
+ */
+export const UploadLogoBody = zod.object({
+  image: zod.instanceof(File),
+});
+
+export const UploadLogoResponse = zod.object({
   url: zod.string(),
 });

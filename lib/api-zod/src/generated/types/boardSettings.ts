@@ -16,5 +16,7 @@ export interface BoardSettings {
   overlayOpacity: number;
   /** @nullable */
   backgroundImageUrl?: string | null;
+  /** @nullable */
+  logoImageUrl?: string | null;
   logoSizePercent: number;
 }

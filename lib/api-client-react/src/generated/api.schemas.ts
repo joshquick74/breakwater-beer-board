@@ -55,6 +55,8 @@ export interface BoardSettings {
   overlayOpacity: number;
   /** @nullable */
   backgroundImageUrl?: string | null;
+  /** @nullable */
+  logoImageUrl?: string | null;
   logoSizePercent: number;
 }
 
@@ -86,5 +88,13 @@ export type UploadBackgroundBody = {
 };
 
 export type UploadBackground200 = {
+  url: string;
+};
+
+export type UploadLogoBody = {
+  image: Blob;
+};
+
+export type UploadLogo200 = {
   url: string;
 };

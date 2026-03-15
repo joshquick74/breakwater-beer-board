@@ -18,3 +18,5 @@ export * from "./updateBeerBody";
 export * from "./updateSettingsBody";
 export * from "./uploadBackground200";
 export * from "./uploadBackgroundBody";
+export * from "./uploadLogo200";
+export * from "./uploadLogoBody";

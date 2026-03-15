@@ -211,6 +211,35 @@ paths:
                     type: string
                 required:
                   - url
+  /upload/logo:
+    post:
+      operationId: uploadLogo
+      tags: [upload]
+      summary: Upload logo image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+              required:
+                - image
+      responses:
+        "200":
+          description: Logo uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                required:
+                  - url
 components:
   schemas:
     HealthStatus:
@@ -319,6 +348,8 @@ components:
         overlayOpacity:
           type: integer
         backgroundImageUrl:
+          type: ["string", "null"]
+        logoImageUrl:
           type: ["string", "null"]
         logoSizePercent:
           type: integer
