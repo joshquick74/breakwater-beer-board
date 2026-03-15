@@ -343,6 +343,8 @@ components:
           type: string
         accentColor:
           type: string
+        textColor:
+          type: string
         overlayEnabled:
           type: boolean
         overlayOpacity:
@@ -359,6 +361,7 @@ components:
         - googleFontHeader
         - googleFontBody
         - accentColor
+        - textColor
         - overlayEnabled
         - overlayOpacity
         - logoSizePercent
@@ -372,6 +375,8 @@ components:
         googleFontBody:
           type: string
         accentColor:
+          type: string
+        textColor:
           type: string
         overlayEnabled:
           type: boolean

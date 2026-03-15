@@ -11,15 +11,15 @@ export default function Board() {
     query: { refetchInterval: 30000 }
   });
 
-  useDynamicFonts(settings?.googleFontHeader, settings?.googleFontBody);
+  const beerFont = settings?.googleFontBody || "Open Sans";
+  useDynamicFonts(beerFont);
 
   const availableBeers = useMemo(() => {
     return beers.filter(b => b.available).sort((a, b) => a.position - b.position);
   }, [beers]);
 
-  const headerFont = settings?.googleFontHeader ? `"${settings.googleFontHeader}", sans-serif` : '"Oswald", sans-serif';
-  const bodyFont = settings?.googleFontBody ? `"${settings.googleFontBody}", sans-serif` : '"Open Sans", sans-serif';
-  const accentColor = settings?.accentColor || "#2d6a4f";
+  const fontFamily = `"${beerFont}", sans-serif`;
+  const textColor = settings?.textColor || "#ffffff";
   const bgImage = settings?.backgroundImageUrl || undefined;
 
   return (
@@ -43,7 +43,7 @@ export default function Board() {
         marginTop: -960,
         marginLeft: -540,
         overflow: "hidden",
-        color: "#fff",
+        color: textColor,
       }}>
         {bgImage && (
           <div style={{
@@ -102,12 +102,12 @@ export default function Board() {
             />
             <div style={{
               height: 3,
-              background: `linear-gradient(to right, transparent, ${accentColor}, transparent)`,
+              background: `linear-gradient(to right, transparent, ${textColor}, transparent)`,
               marginTop: 16,
               width: "60%",
               marginLeft: "auto",
               marginRight: "auto",
-              opacity: 0.7,
+              opacity: 0.4,
             }} />
           </div>
 
@@ -117,7 +117,7 @@ export default function Board() {
             flexDirection: "column",
             justifyContent: "flex-start",
             gap: 0,
-            fontFamily: bodyFont,
+            fontFamily,
           }}>
             {availableBeers.map((beer) => (
               <div
@@ -137,7 +137,7 @@ export default function Board() {
                     flexWrap: "wrap",
                   }}>
                     <span style={{
-                      fontFamily: headerFont,
+                      fontFamily,
                       fontSize: 38,
                       fontWeight: 700,
                       lineHeight: 1.2,
@@ -149,7 +149,7 @@ export default function Board() {
                   </div>
                   <div style={{
                     fontSize: 24,
-                    color: "rgba(255,255,255,0.7)",
+                    opacity: 0.7,
                     marginTop: 2,
                     fontWeight: 500,
                     textTransform: "uppercase",
@@ -160,7 +160,7 @@ export default function Board() {
                 </div>
 
                 <div style={{
-                  fontFamily: headerFont,
+                  fontFamily,
                   fontSize: 38,
                   fontWeight: 700,
                   flexShrink: 0,

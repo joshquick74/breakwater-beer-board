@@ -12,6 +12,7 @@ export interface BoardSettings {
   googleFontHeader: string;
   googleFontBody: string;
   accentColor: string;
+  textColor: string;
   overlayEnabled: boolean;
   overlayOpacity: number;
   /** @nullable */

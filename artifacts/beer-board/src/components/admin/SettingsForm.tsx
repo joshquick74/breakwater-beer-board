@@ -8,17 +8,36 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useGetSettings, useUpdateSettings, getGetSettingsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getAuthHeaders } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Image as ImageIcon, ImagePlus } from "lucide-react";
 
+const COMMON_FONTS = [
+  "Oswald",
+  "Open Sans",
+  "Roboto",
+  "Bebas Neue",
+  "Montserrat",
+  "Lato",
+  "Poppins",
+  "Raleway",
+  "Playfair Display",
+  "Anton",
+  "Barlow Condensed",
+  "Russo One",
+  "Teko",
+  "Black Ops One",
+  "Permanent Marker",
+];
+
+const CUSTOM_FONT_VALUE = "__custom__";
+
 const settingsSchema = z.object({
-  headerTitle: z.string().optional(),
-  googleFontHeader: z.string().min(1, "Header font is required"),
-  googleFontBody: z.string().min(1, "Body font is required"),
-  accentColor: z.string().min(1, "Accent color is required"),
+  googleFontBody: z.string().min(1, "Font is required"),
+  textColor: z.string().min(1, "Text color is required"),
   overlayEnabled: z.boolean(),
   overlayOpacity: z.number().min(0).max(100),
   logoSizePercent: z.number().min(10).max(200),
@@ -34,16 +53,15 @@ export function SettingsForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const [useCustomFont, setUseCustomFont] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
-      headerTitle: "",
-      googleFontHeader: "Oswald",
       googleFontBody: "Open Sans",
-      accentColor: "#f59e0b",
+      textColor: "#ffffff",
       overlayEnabled: true,
       overlayOpacity: 60,
       logoSizePercent: 100,
@@ -52,11 +70,12 @@ export function SettingsForm() {
 
   useEffect(() => {
     if (settings) {
+      const font = settings.googleFontBody;
+      const isCustom = !COMMON_FONTS.includes(font);
+      setUseCustomFont(isCustom);
       form.reset({
-        headerTitle: settings.headerTitle,
-        googleFontHeader: settings.googleFontHeader,
-        googleFontBody: settings.googleFontBody,
-        accentColor: settings.accentColor,
+        googleFontBody: font,
+        textColor: settings.textColor,
         overlayEnabled: settings.overlayEnabled,
         overlayOpacity: settings.overlayOpacity,
         logoSizePercent: settings.logoSizePercent,
@@ -127,7 +146,20 @@ export function SettingsForm() {
     }
   };
 
+  const handleFontSelect = (value: string) => {
+    if (value === CUSTOM_FONT_VALUE) {
+      setUseCustomFont(true);
+      form.setValue("googleFontBody", "");
+    } else {
+      setUseCustomFont(false);
+      form.setValue("googleFontBody", value);
+    }
+  };
+
   if (isLoading) return <div className="p-8 text-center text-muted-foreground animate-pulse">Loading settings...</div>;
+
+  const currentFont = form.watch("googleFontBody");
+  const selectValue = useCustomFont ? CUSTOM_FONT_VALUE : (COMMON_FONTS.includes(currentFont) ? currentFont : CUSTOM_FONT_VALUE);
 
   return (
     <div className="space-y-8">
@@ -212,33 +244,57 @@ export function SettingsForm() {
       <Card className="p-6">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="space-y-6">
-            <h3 className="text-xl font-bold border-b border-border/50 pb-4">Typography & Branding</h3>
+            <h3 className="text-xl font-bold border-b border-border/50 pb-4">Beer Text Style</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="accentColor">Accent Color</Label>
+                <Label htmlFor="textColor">Text Color</Label>
                 <div className="flex gap-3">
                   <Input 
-                    id="accentColor" 
+                    id="textColor" 
                     type="color" 
                     className="w-14 p-1 cursor-pointer h-12" 
-                    {...form.register("accentColor")} 
+                    {...form.register("textColor")} 
                   />
                   <Input 
                     type="text" 
                     className="flex-1" 
-                    {...form.register("accentColor")} 
+                    {...form.register("textColor")} 
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="googleFontHeader">Header Google Font Name</Label>
-                <Input id="googleFontHeader" {...form.register("googleFontHeader")} placeholder="e.g. Oswald" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="googleFontBody">Body Google Font Name</Label>
-                <Input id="googleFontBody" {...form.register("googleFontBody")} placeholder="e.g. Open Sans" />
+                <Label>Font</Label>
+                <Select value={selectValue} onValueChange={handleFontSelect}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a font" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {COMMON_FONTS.map((font) => (
+                      <SelectItem key={font} value={font}>
+                        {font}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value={CUSTOM_FONT_VALUE}>
+                      Custom Google Font...
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
+            {useCustomFont && (
+              <div className="space-y-2">
+                <Label htmlFor="customFont">Google Font Name</Label>
+                <Input
+                  id="customFont"
+                  placeholder="e.g. Bangers, Righteous, Press Start 2P"
+                  value={form.watch("googleFontBody")}
+                  onChange={(e) => form.setValue("googleFontBody", e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Enter the exact name from Google Fonts (fonts.google.com)
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="space-y-6">
