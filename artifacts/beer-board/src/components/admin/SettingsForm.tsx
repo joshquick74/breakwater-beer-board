@@ -14,6 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getAuthHeaders } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Image as ImageIcon, ImagePlus } from "lucide-react";
+import { useDynamicFonts } from "@/hooks/use-fonts";
 
 const COMMON_FONTS = [
   "Oswald",
@@ -98,12 +99,14 @@ function FontColorPicker({
               }
             }}
           >
-            <SelectTrigger className="h-9">
+            <SelectTrigger className="h-9" style={fontValue && !showCustom ? { fontFamily: `"${fontValue}", sans-serif` } : undefined}>
               <SelectValue placeholder="Choose font" />
             </SelectTrigger>
             <SelectContent>
               {COMMON_FONTS.map((font) => (
-                <SelectItem key={font} value={font}>{font}</SelectItem>
+                <SelectItem key={font} value={font}>
+                  <span style={{ fontFamily: `"${font}", sans-serif` }}>{font}</span>
+                </SelectItem>
               ))}
               <SelectItem value={CUSTOM_FONT_VALUE}>Custom...</SelectItem>
             </SelectContent>
@@ -140,6 +143,7 @@ function FontColorPicker({
 }
 
 export function SettingsForm() {
+  useDynamicFonts(...COMMON_FONTS);
   const { data: settings, isLoading } = useGetSettings();
   const { mutateAsync: updateSettings } = useUpdateSettings();
   const queryClient = useQueryClient();
