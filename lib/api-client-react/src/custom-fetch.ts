@@ -310,6 +310,11 @@ export async function customFetch<T = unknown>(
   const response = await fetch(input, { ...init, method, headers });
 
   if (!response.ok) {
+    if (response.status === 401 && typeof window !== "undefined") {
+      localStorage.removeItem("beer_admin_token");
+      window.location.href = "/login";
+      throw new ApiError(response, null, requestInfo);
+    }
     const errorData = await parseErrorBody(response, method);
     throw new ApiError(response, errorData, requestInfo);
   }
