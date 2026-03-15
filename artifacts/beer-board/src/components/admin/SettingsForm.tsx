@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -171,6 +171,23 @@ export function SettingsForm() {
   const defaultColor = "#ffffff";
   const defaultFont = "Open Sans";
 
+  const formValues = useMemo<SettingsFormValues | undefined>(() => {
+    if (!settings) return undefined;
+    const fallbackFont = settings.googleFontBody || defaultFont;
+    const fallbackColor = settings.textColor || defaultColor;
+    return {
+      overlayEnabled: settings.overlayEnabled,
+      overlayOpacity: settings.overlayOpacity,
+      logoSizePercent: settings.logoSizePercent,
+      boardRotation: settings.boardRotation ?? 270,
+      brewery: { font: settings.breweryFont || fallbackFont, color: settings.breweryColor || fallbackColor },
+      beerName: { font: settings.beerNameFont || fallbackFont, color: settings.beerNameColor || fallbackColor },
+      style: { font: settings.styleFont || fallbackFont, color: settings.styleColor || fallbackColor },
+      abv: { font: settings.abvFont || fallbackFont, color: settings.abvColor || fallbackColor },
+      price: { font: settings.priceFont || fallbackFont, color: settings.priceColor || fallbackColor },
+    };
+  }, [settings]);
+
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
@@ -184,34 +201,8 @@ export function SettingsForm() {
       abv: { font: defaultFont, color: defaultColor },
       price: { font: defaultFont, color: defaultColor },
     },
+    values: formValues,
   });
-
-  useEffect(() => {
-    if (settings) {
-      const fallbackFont = settings.googleFontBody || defaultFont;
-      const fallbackColor = settings.textColor || defaultColor;
-      form.reset({
-        overlayEnabled: settings.overlayEnabled,
-        overlayOpacity: settings.overlayOpacity,
-        logoSizePercent: settings.logoSizePercent,
-        boardRotation: settings.boardRotation ?? 270,
-        brewery: { font: settings.breweryFont || fallbackFont, color: settings.breweryColor || fallbackColor },
-        beerName: { font: settings.beerNameFont || fallbackFont, color: settings.beerNameColor || fallbackColor },
-        style: { font: settings.styleFont || fallbackFont, color: settings.styleColor || fallbackColor },
-        abv: { font: settings.abvFont || fallbackFont, color: settings.abvColor || fallbackColor },
-        price: { font: settings.priceFont || fallbackFont, color: settings.priceColor || fallbackColor },
-      });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    settings?.overlayEnabled, settings?.overlayOpacity, settings?.logoSizePercent, settings?.boardRotation,
-    settings?.breweryFont, settings?.breweryColor,
-    settings?.beerNameFont, settings?.beerNameColor,
-    settings?.styleFont, settings?.styleColor,
-    settings?.abvFont, settings?.abvColor,
-    settings?.priceFont, settings?.priceColor,
-    settings?.googleFontBody, settings?.textColor,
-  ]);
 
   const onSubmit = async (data: SettingsFormValues) => {
     setIsSubmitting(true);
