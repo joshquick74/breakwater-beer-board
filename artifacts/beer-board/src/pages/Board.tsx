@@ -1,6 +1,103 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { useListBeers, useGetSettings } from "@workspace/api-client-react";
 import { useDynamicFonts } from "@/hooks/use-fonts";
+
+type BeerRowProps = {
+  beer: { id: number; brewery: string; beerName: string; style: string; abv: string; price: string };
+  fonts: { breweryFont: string; beerNameFont: string; styleFont: string; abvFont: string; priceFont: string };
+  colors: { breweryColor: string; beerNameColor: string; styleColor: string; abvColor: string; priceColor: string };
+  compact?: boolean;
+};
+
+function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
+  const titleSize = compact ? 28 : 38;
+  const subSize = compact ? 18 : 24;
+
+  return (
+    <div style={{
+      display: "flex",
+      alignItems: "baseline",
+      padding: compact ? "12px 0" : "18px 0",
+      borderBottom: "1px solid rgba(255,255,255,0.08)",
+    }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{
+          display: "flex",
+          alignItems: "baseline",
+          gap: compact ? 6 : 8,
+          flexWrap: "wrap",
+        }}>
+          <span style={{
+            fontFamily: `"${fonts.breweryFont}", sans-serif`,
+            fontSize: titleSize,
+            fontWeight: 700,
+            lineHeight: 1.2,
+            textTransform: "uppercase",
+            letterSpacing: "0.01em",
+            color: colors.breweryColor,
+          }}>
+            {beer.brewery}
+          </span>
+          <span style={{
+            fontFamily: `"${fonts.breweryFont}", sans-serif`,
+            fontSize: titleSize,
+            fontWeight: 700,
+            color: colors.breweryColor,
+          }}>
+            -
+          </span>
+          <span style={{
+            fontFamily: `"${fonts.beerNameFont}", sans-serif`,
+            fontSize: titleSize,
+            fontWeight: 700,
+            lineHeight: 1.2,
+            textTransform: "uppercase",
+            letterSpacing: "0.01em",
+            color: colors.beerNameColor,
+          }}>
+            {beer.beerName}
+          </span>
+        </div>
+        <div style={{
+          marginTop: 2,
+          fontWeight: 500,
+          textTransform: "uppercase",
+          letterSpacing: "0.02em",
+          display: "flex",
+          alignItems: "baseline",
+          gap: 6,
+        }}>
+          <span style={{
+            fontFamily: `"${fonts.styleFont}", sans-serif`,
+            fontSize: subSize,
+            color: colors.styleColor,
+          }}>
+            {beer.style}
+          </span>
+          <span style={{ fontFamily: `"${fonts.styleFont}", sans-serif`, fontSize: subSize, color: colors.styleColor }}>-</span>
+          <span style={{
+            fontFamily: `"${fonts.abvFont}", sans-serif`,
+            fontSize: subSize,
+            color: colors.abvColor,
+          }}>
+            {beer.abv}
+          </span>
+        </div>
+      </div>
+      <div style={{
+        fontFamily: `"${fonts.priceFont}", sans-serif`,
+        fontSize: titleSize,
+        fontWeight: 700,
+        flexShrink: 0,
+        paddingLeft: compact ? 12 : 20,
+        textAlign: "right",
+        color: colors.priceColor,
+      }}>
+        {beer.price}
+      </div>
+    </div>
+  );
+}
 
 export default function Board() {
   const { data: beers = [] } = useListBeers({
@@ -33,9 +130,34 @@ export default function Board() {
   const bgImage = settings?.backgroundImageUrl || undefined;
   const boardRotation = settings?.boardRotation ?? 270;
 
+  const isLandscape = boardRotation === 0 || boardRotation === 180;
   const isRotated = boardRotation === 90 || boardRotation === 270;
   const boardW = isRotated ? 1080 : 1920;
   const boardH = isRotated ? 1920 : 1080;
+
+  const midpoint = Math.ceil(availableBeers.length / 2);
+  const leftColumn = isLandscape ? availableBeers.slice(0, midpoint) : [];
+  const rightColumn = isLandscape ? availableBeers.slice(midpoint) : [];
+
+  const [scale, setScale] = useState(1);
+  const computeScale = useCallback(() => {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const rotated = boardRotation === 90 || boardRotation === 270;
+    const effectiveW = rotated ? boardH : boardW;
+    const effectiveH = rotated ? boardW : boardH;
+    setScale(Math.min(vw / effectiveW, vh / effectiveH));
+  }, [boardW, boardH, boardRotation]);
+
+  useEffect(() => {
+    computeScale();
+    window.addEventListener("resize", computeScale);
+    return () => window.removeEventListener("resize", computeScale);
+  }, [computeScale]);
+
+  const transforms = [];
+  transforms.push(`scale(${scale})`);
+  if (boardRotation !== 0) transforms.push(`rotate(-${boardRotation}deg)`);
 
   return (
     <div style={{
@@ -50,13 +172,8 @@ export default function Board() {
       <div style={{
         width: boardW,
         height: boardH,
-        transform: boardRotation === 0 ? "none" : `rotate(-${boardRotation}deg)`,
+        transform: transforms.join(" "),
         transformOrigin: "center center",
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        marginTop: -(boardH / 2),
-        marginLeft: -(boardW / 2),
         overflow: "hidden",
         color: textColor,
       }}>
@@ -126,114 +243,70 @@ export default function Board() {
             }} />
           </div>
 
-          <div style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            gap: 0,
-          }}>
-            {availableBeers.map((beer) => (
-              <div
-                key={beer.id}
-                style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  padding: "18px 0",
-                  borderBottom: "1px solid rgba(255,255,255,0.08)",
-                }}
-              >
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{
-                    display: "flex",
-                    alignItems: "baseline",
-                    gap: 8,
-                    flexWrap: "wrap",
-                  }}>
-                    <span style={{
-                      fontFamily: `"${breweryFont}", sans-serif`,
-                      fontSize: 38,
-                      fontWeight: 700,
-                      lineHeight: 1.2,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.01em",
-                      color: breweryColor,
-                    }}>
-                      {beer.brewery}
-                    </span>
-                    <span style={{
-                      fontFamily: `"${breweryFont}", sans-serif`,
-                      fontSize: 38,
-                      fontWeight: 700,
-                      color: breweryColor,
-                    }}>
-                      -
-                    </span>
-                    <span style={{
-                      fontFamily: `"${beerNameFont}", sans-serif`,
-                      fontSize: 38,
-                      fontWeight: 700,
-                      lineHeight: 1.2,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.01em",
-                      color: beerNameColor,
-                    }}>
-                      {beer.beerName}
-                    </span>
-                  </div>
-                  <div style={{
-                    marginTop: 2,
-                    fontWeight: 500,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.02em",
-                    display: "flex",
-                    alignItems: "baseline",
-                    gap: 6,
-                  }}>
-                    <span style={{
-                      fontFamily: `"${styleFont}", sans-serif`,
-                      fontSize: 24,
-                      color: styleColor,
-                    }}>
-                      {beer.style}
-                    </span>
-                    <span style={{ fontFamily: `"${styleFont}", sans-serif`, fontSize: 24, color: styleColor }}>-</span>
-                    <span style={{
-                      fontFamily: `"${abvFont}", sans-serif`,
-                      fontSize: 24,
-                      color: abvColor,
-                    }}>
-                      {beer.abv}
-                    </span>
-                  </div>
-                </div>
-
-                <div style={{
-                  fontFamily: `"${priceFont}", sans-serif`,
-                  fontSize: 38,
-                  fontWeight: 700,
-                  flexShrink: 0,
-                  paddingLeft: 20,
-                  textAlign: "right",
-                  color: priceColor,
-                }}>
-                  {beer.price}
-                </div>
+          {isLandscape ? (
+            <div style={{
+              flex: 1,
+              display: "flex",
+              gap: 0,
+              overflow: "hidden",
+            }}>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+                {leftColumn.map((beer) => (
+                  <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact />
+                ))}
               </div>
-            ))}
-
-            {availableBeers.length === 0 && (
               <div style={{
-                textAlign: "center",
-                marginTop: 200,
-                fontSize: 40,
-                opacity: 0.5,
-                fontWeight: 600,
-              }}>
-                No beers currently available
+                width: 2,
+                background: breweryColor,
+                opacity: 0.35,
+                flexShrink: 0,
+                margin: "0 30px",
+              }} />
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+                {rightColumn.map((beer) => (
+                  <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact />
+                ))}
               </div>
-            )}
-          </div>
+              {availableBeers.length === 0 && (
+                <div style={{
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 40,
+                  opacity: 0.5,
+                  fontWeight: 600,
+                }}>
+                  No beers currently available
+                </div>
+              )}
+            </div>
+          ) : (
+            <div style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              gap: 0,
+            }}>
+              {availableBeers.map((beer) => (
+                <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} />
+              ))}
+
+              {availableBeers.length === 0 && (
+                <div style={{
+                  textAlign: "center",
+                  marginTop: 200,
+                  fontSize: 40,
+                  opacity: 0.5,
+                  fontWeight: 600,
+                }}>
+                  No beers currently available
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
