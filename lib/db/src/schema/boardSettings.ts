@@ -14,6 +14,16 @@ export const boardSettingsTable = pgTable("board_settings", {
   backgroundImageUrl: text("background_image_url"),
   logoImageUrl: text("logo_image_url"),
   logoSizePercent: integer("logo_size_percent").notNull().default(100),
+  breweryFont: text("brewery_font").notNull().default("Open Sans"),
+  breweryColor: text("brewery_color").notNull().default("#ffffff"),
+  beerNameFont: text("beer_name_font").notNull().default("Open Sans"),
+  beerNameColor: text("beer_name_color").notNull().default("#ffffff"),
+  styleFont: text("style_font").notNull().default("Open Sans"),
+  styleColor: text("style_color").notNull().default("#ffffff"),
+  abvFont: text("abv_font").notNull().default("Open Sans"),
+  abvColor: text("abv_color").notNull().default("#ffffff"),
+  priceFont: text("price_font").notNull().default("Open Sans"),
+  priceColor: text("price_color").notNull().default("#ffffff"),
 });
 
 export const insertBoardSettingsSchema = createInsertSchema(boardSettingsTable).omit({ id: true });

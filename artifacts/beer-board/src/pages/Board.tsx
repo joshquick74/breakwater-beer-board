@@ -11,14 +11,24 @@ export default function Board() {
     query: { refetchInterval: 30000 }
   });
 
-  const beerFont = settings?.googleFontBody || "Open Sans";
-  useDynamicFonts(beerFont);
+  const breweryFont = settings?.breweryFont || settings?.googleFontBody || "Open Sans";
+  const beerNameFont = settings?.beerNameFont || settings?.googleFontBody || "Open Sans";
+  const styleFont = settings?.styleFont || settings?.googleFontBody || "Open Sans";
+  const abvFont = settings?.abvFont || settings?.googleFontBody || "Open Sans";
+  const priceFont = settings?.priceFont || settings?.googleFontBody || "Open Sans";
+
+  const breweryColor = settings?.breweryColor || settings?.textColor || "#ffffff";
+  const beerNameColor = settings?.beerNameColor || settings?.textColor || "#ffffff";
+  const styleColor = settings?.styleColor || settings?.textColor || "#ffffff";
+  const abvColor = settings?.abvColor || settings?.textColor || "#ffffff";
+  const priceColor = settings?.priceColor || settings?.textColor || "#ffffff";
+
+  useDynamicFonts(breweryFont, beerNameFont, styleFont, abvFont, priceFont);
 
   const availableBeers = useMemo(() => {
     return beers.filter(b => b.available).sort((a, b) => a.position - b.position);
   }, [beers]);
 
-  const fontFamily = `"${beerFont}", sans-serif`;
   const textColor = settings?.textColor || "#ffffff";
   const bgImage = settings?.backgroundImageUrl || undefined;
 
@@ -117,7 +127,6 @@ export default function Board() {
             flexDirection: "column",
             justifyContent: "flex-start",
             gap: 0,
-            fontFamily,
           }}>
             {availableBeers.map((beer) => (
               <div
@@ -137,35 +146,71 @@ export default function Board() {
                     flexWrap: "wrap",
                   }}>
                     <span style={{
-                      fontFamily,
+                      fontFamily: `"${breweryFont}", sans-serif`,
                       fontSize: 38,
                       fontWeight: 700,
                       lineHeight: 1.2,
                       textTransform: "uppercase",
                       letterSpacing: "0.01em",
+                      color: breweryColor,
                     }}>
-                      {beer.brewery} - {beer.beerName}
+                      {beer.brewery}
+                    </span>
+                    <span style={{
+                      fontSize: 38,
+                      fontWeight: 700,
+                      opacity: 0.4,
+                      color: textColor,
+                    }}>
+                      -
+                    </span>
+                    <span style={{
+                      fontFamily: `"${beerNameFont}", sans-serif`,
+                      fontSize: 38,
+                      fontWeight: 700,
+                      lineHeight: 1.2,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.01em",
+                      color: beerNameColor,
+                    }}>
+                      {beer.beerName}
                     </span>
                   </div>
                   <div style={{
-                    fontSize: 24,
-                    opacity: 0.7,
                     marginTop: 2,
                     fontWeight: 500,
                     textTransform: "uppercase",
                     letterSpacing: "0.02em",
+                    display: "flex",
+                    alignItems: "baseline",
+                    gap: 6,
                   }}>
-                    {beer.style} - {beer.abv}
+                    <span style={{
+                      fontFamily: `"${styleFont}", sans-serif`,
+                      fontSize: 24,
+                      color: styleColor,
+                    }}>
+                      {beer.style}
+                    </span>
+                    <span style={{ fontSize: 24, opacity: 0.4, color: textColor }}>-</span>
+                    <span style={{
+                      fontFamily: `"${abvFont}", sans-serif`,
+                      fontSize: 24,
+                      color: abvColor,
+                    }}>
+                      {beer.abv}
+                    </span>
                   </div>
                 </div>
 
                 <div style={{
-                  fontFamily,
+                  fontFamily: `"${priceFont}", sans-serif`,
                   fontSize: 38,
                   fontWeight: 700,
                   flexShrink: 0,
                   paddingLeft: 20,
                   textAlign: "right",
+                  color: priceColor,
                 }}>
                   {beer.price}
                 </div>

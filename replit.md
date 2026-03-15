@@ -59,6 +59,7 @@ artifacts-monorepo/
 
 ### board_settings table
 - id, header_title, google_font_header, google_font_body, accent_color, text_color, overlay_enabled, overlay_opacity, background_image_url, logo_image_url, logo_size_percent
+- Per-element styling: brewery_font, brewery_color, beer_name_font, beer_name_color, style_font, style_color, abv_font, abv_color, price_font, price_color
 
 ## API Endpoints
 
@@ -96,7 +97,8 @@ All write endpoints require `Authorization: Bearer <token>` header.
 - Upload background image and logo
 - Toggle/adjust overlay opacity
 - Change font (15 presets + custom Google Font)
-- Change text color
+- Per-element font and color (Brewery, Beer Name, Style, ABV, Price)
+- "Apply to All" buttons for font/color
 - Adjust logo size
 - Preview board button
 

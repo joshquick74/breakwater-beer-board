@@ -105,6 +105,16 @@ export const GetSettingsResponse = zod.object({
   backgroundImageUrl: zod.string().nullish(),
   logoImageUrl: zod.string().nullish(),
   logoSizePercent: zod.number(),
+  breweryFont: zod.string(),
+  breweryColor: zod.string(),
+  beerNameFont: zod.string(),
+  beerNameColor: zod.string(),
+  styleFont: zod.string(),
+  styleColor: zod.string(),
+  abvFont: zod.string(),
+  abvColor: zod.string(),
+  priceFont: zod.string(),
+  priceColor: zod.string(),
 });
 
 /**
@@ -119,6 +129,16 @@ export const UpdateSettingsBody = zod.object({
   overlayEnabled: zod.boolean().optional(),
   overlayOpacity: zod.number().optional(),
   logoSizePercent: zod.number().optional(),
+  breweryFont: zod.string().optional(),
+  breweryColor: zod.string().optional(),
+  beerNameFont: zod.string().optional(),
+  beerNameColor: zod.string().optional(),
+  styleFont: zod.string().optional(),
+  styleColor: zod.string().optional(),
+  abvFont: zod.string().optional(),
+  abvColor: zod.string().optional(),
+  priceFont: zod.string().optional(),
+  priceColor: zod.string().optional(),
 });
 
 export const UpdateSettingsResponse = zod.object({
@@ -133,6 +153,16 @@ export const UpdateSettingsResponse = zod.object({
   backgroundImageUrl: zod.string().nullish(),
   logoImageUrl: zod.string().nullish(),
   logoSizePercent: zod.number(),
+  breweryFont: zod.string(),
+  breweryColor: zod.string(),
+  beerNameFont: zod.string(),
+  beerNameColor: zod.string(),
+  styleFont: zod.string(),
+  styleColor: zod.string(),
+  abvFont: zod.string(),
+  abvColor: zod.string(),
+  priceFont: zod.string(),
+  priceColor: zod.string(),
 });
 
 /**

@@ -15,4 +15,14 @@ export interface UpdateSettingsBody {
   overlayEnabled?: boolean;
   overlayOpacity?: number;
   logoSizePercent?: number;
+  breweryFont?: string;
+  breweryColor?: string;
+  beerNameFont?: string;
+  beerNameColor?: string;
+  styleFont?: string;
+  styleColor?: string;
+  abvFont?: string;
+  abvColor?: string;
+  priceFont?: string;
+  priceColor?: string;
 }

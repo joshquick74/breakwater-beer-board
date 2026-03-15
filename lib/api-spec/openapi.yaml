@@ -355,6 +355,26 @@ components:
           type: ["string", "null"]
         logoSizePercent:
           type: integer
+        breweryFont:
+          type: string
+        breweryColor:
+          type: string
+        beerNameFont:
+          type: string
+        beerNameColor:
+          type: string
+        styleFont:
+          type: string
+        styleColor:
+          type: string
+        abvFont:
+          type: string
+        abvColor:
+          type: string
+        priceFont:
+          type: string
+        priceColor:
+          type: string
       required:
         - id
         - headerTitle
@@ -365,6 +385,16 @@ components:
         - overlayEnabled
         - overlayOpacity
         - logoSizePercent
+        - breweryFont
+        - breweryColor
+        - beerNameFont
+        - beerNameColor
+        - styleFont
+        - styleColor
+        - abvFont
+        - abvColor
+        - priceFont
+        - priceColor
     UpdateSettingsBody:
       type: object
       properties:
@@ -384,6 +414,26 @@ components:
           type: integer
         logoSizePercent:
           type: integer
+        breweryFont:
+          type: string
+        breweryColor:
+          type: string
+        beerNameFont:
+          type: string
+        beerNameColor:
+          type: string
+        styleFont:
+          type: string
+        styleColor:
+          type: string
+        abvFont:
+          type: string
+        abvColor:
+          type: string
+        priceFont:
+          type: string
+        priceColor:
+          type: string
     LoginBody:
       type: object
       properties:

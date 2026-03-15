@@ -270,13 +270,21 @@ export default function ApiDocs() {
               response={`{
   "id": 1,
   "headerTitle": "Breakwater Barbecue",
-  "googleFontBody": "Open Sans",
-  "textColor": "#ffffff",
   "overlayEnabled": true,
   "overlayOpacity": 60,
   "backgroundImageUrl": "/api/uploads/background.png",
   "logoImageUrl": null,
-  "logoSizePercent": 100
+  "logoSizePercent": 100,
+  "breweryFont": "Oswald",
+  "breweryColor": "#ffffff",
+  "beerNameFont": "Oswald",
+  "beerNameColor": "#f59e0b",
+  "styleFont": "Open Sans",
+  "styleColor": "#cccccc",
+  "abvFont": "Open Sans",
+  "abvColor": "#cccccc",
+  "priceFont": "Bebas Neue",
+  "priceColor": "#f59e0b"
 }`}
               curl={`curl ${BASE_URL}/api/settings`}
             />
@@ -287,14 +295,16 @@ export default function ApiDocs() {
               description="Update board settings (partial update)"
               auth
               body={`{
-  "textColor": "#f5f5dc",
-  "googleFontBody": "Bebas Neue",
+  "breweryFont": "Oswald",
+  "breweryColor": "#ffffff",
+  "beerNameColor": "#f59e0b",
+  "priceFont": "Bebas Neue",
   "overlayOpacity": 50
 }`}
               curl={`curl -X PATCH ${BASE_URL}/api/settings \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer YOUR_TOKEN" \\
-  -d '{"textColor": "#f5f5dc", "googleFontBody": "Bebas Neue"}'`}
+  -d '{"breweryFont": "Oswald", "beerNameColor": "#f59e0b"}'`}
             />
           </div>
         </section>

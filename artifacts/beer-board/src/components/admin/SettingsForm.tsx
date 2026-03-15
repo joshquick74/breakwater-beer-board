@@ -35,15 +35,109 @@ const COMMON_FONTS = [
 
 const CUSTOM_FONT_VALUE = "__custom__";
 
+const ELEMENTS = [
+  { key: "brewery", label: "Brewery" },
+  { key: "beerName", label: "Beer Name" },
+  { key: "style", label: "Style" },
+  { key: "abv", label: "ABV" },
+  { key: "price", label: "Price" },
+] as const;
+
+type ElementKey = typeof ELEMENTS[number]["key"];
+
+const elementStyleSchema = z.object({
+  font: z.string().min(1),
+  color: z.string().min(1),
+});
+
 const settingsSchema = z.object({
-  googleFontBody: z.string().min(1, "Font is required"),
-  textColor: z.string().min(1, "Text color is required"),
   overlayEnabled: z.boolean(),
   overlayOpacity: z.number().min(0).max(100),
   logoSizePercent: z.number().min(10).max(200),
+  brewery: elementStyleSchema,
+  beerName: elementStyleSchema,
+  style: elementStyleSchema,
+  abv: elementStyleSchema,
+  price: elementStyleSchema,
 });
 
 type SettingsFormValues = z.infer<typeof settingsSchema>;
+
+function FontColorPicker({
+  label,
+  fontValue,
+  colorValue,
+  onFontChange,
+  onColorChange,
+}: {
+  label: string;
+  fontValue: string;
+  colorValue: string;
+  onFontChange: (font: string) => void;
+  onColorChange: (color: string) => void;
+}) {
+  const isCustom = fontValue ? !COMMON_FONTS.includes(fontValue) : false;
+  const [showCustom, setShowCustom] = useState(isCustom);
+  const selectValue = showCustom ? CUSTOM_FONT_VALUE : (COMMON_FONTS.includes(fontValue) ? fontValue : CUSTOM_FONT_VALUE);
+
+  return (
+    <div className="border border-border/50 rounded-lg p-4 space-y-3">
+      <h4 className="font-semibold text-sm">{label}</h4>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label className="text-xs text-muted-foreground">Font</Label>
+          <Select
+            value={selectValue}
+            onValueChange={(val) => {
+              if (val === CUSTOM_FONT_VALUE) {
+                setShowCustom(true);
+                onFontChange("");
+              } else {
+                setShowCustom(false);
+                onFontChange(val);
+              }
+            }}
+          >
+            <SelectTrigger className="h-9">
+              <SelectValue placeholder="Choose font" />
+            </SelectTrigger>
+            <SelectContent>
+              {COMMON_FONTS.map((font) => (
+                <SelectItem key={font} value={font}>{font}</SelectItem>
+              ))}
+              <SelectItem value={CUSTOM_FONT_VALUE}>Custom...</SelectItem>
+            </SelectContent>
+          </Select>
+          {showCustom && (
+            <Input
+              placeholder="Google Font name"
+              value={fontValue}
+              onChange={(e) => onFontChange(e.target.value)}
+              className="h-9 text-sm"
+            />
+          )}
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs text-muted-foreground">Color</Label>
+          <div className="flex gap-2">
+            <Input
+              type="color"
+              className="w-12 p-1 cursor-pointer h-9"
+              value={colorValue}
+              onChange={(e) => onColorChange(e.target.value)}
+            />
+            <Input
+              type="text"
+              className="flex-1 h-9 text-sm"
+              value={colorValue}
+              onChange={(e) => onColorChange(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function SettingsForm() {
   const { data: settings, isLoading } = useGetSettings();
@@ -53,41 +147,72 @@ export function SettingsForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
-  const [useCustomFont, setUseCustomFont] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
+
+  const defaultColor = "#ffffff";
+  const defaultFont = "Open Sans";
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
-      googleFontBody: "Open Sans",
-      textColor: "#ffffff",
       overlayEnabled: true,
       overlayOpacity: 60,
       logoSizePercent: 100,
+      brewery: { font: defaultFont, color: defaultColor },
+      beerName: { font: defaultFont, color: defaultColor },
+      style: { font: defaultFont, color: defaultColor },
+      abv: { font: defaultFont, color: defaultColor },
+      price: { font: defaultFont, color: defaultColor },
     },
   });
 
   useEffect(() => {
     if (settings) {
-      const font = settings.googleFontBody;
-      const isCustom = !COMMON_FONTS.includes(font);
-      setUseCustomFont(isCustom);
+      const fallbackFont = settings.googleFontBody || defaultFont;
+      const fallbackColor = settings.textColor || defaultColor;
       form.reset({
-        googleFontBody: font,
-        textColor: settings.textColor ?? "#ffffff",
         overlayEnabled: settings.overlayEnabled,
         overlayOpacity: settings.overlayOpacity,
         logoSizePercent: settings.logoSizePercent,
+        brewery: { font: settings.breweryFont || fallbackFont, color: settings.breweryColor || fallbackColor },
+        beerName: { font: settings.beerNameFont || fallbackFont, color: settings.beerNameColor || fallbackColor },
+        style: { font: settings.styleFont || fallbackFont, color: settings.styleColor || fallbackColor },
+        abv: { font: settings.abvFont || fallbackFont, color: settings.abvColor || fallbackColor },
+        price: { font: settings.priceFont || fallbackFont, color: settings.priceColor || fallbackColor },
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings?.googleFontBody, settings?.textColor, settings?.overlayEnabled, settings?.overlayOpacity, settings?.logoSizePercent]);
+  }, [
+    settings?.overlayEnabled, settings?.overlayOpacity, settings?.logoSizePercent,
+    settings?.breweryFont, settings?.breweryColor,
+    settings?.beerNameFont, settings?.beerNameColor,
+    settings?.styleFont, settings?.styleColor,
+    settings?.abvFont, settings?.abvColor,
+    settings?.priceFont, settings?.priceColor,
+    settings?.googleFontBody, settings?.textColor,
+  ]);
 
   const onSubmit = async (data: SettingsFormValues) => {
     setIsSubmitting(true);
     try {
-      await updateSettings({ data });
+      await updateSettings({
+        data: {
+          overlayEnabled: data.overlayEnabled,
+          overlayOpacity: data.overlayOpacity,
+          logoSizePercent: data.logoSizePercent,
+          breweryFont: data.brewery.font,
+          breweryColor: data.brewery.color,
+          beerNameFont: data.beerName.font,
+          beerNameColor: data.beerName.color,
+          styleFont: data.style.font,
+          styleColor: data.style.color,
+          abvFont: data.abv.font,
+          abvColor: data.abv.color,
+          priceFont: data.price.font,
+          priceColor: data.price.color,
+        },
+      });
       queryClient.invalidateQueries({ queryKey: getGetSettingsQueryKey() });
       toast({ title: "Success", description: "Settings updated successfully", variant: "default" });
     } catch (error) {
@@ -147,20 +272,14 @@ export function SettingsForm() {
     }
   };
 
-  const handleFontSelect = (value: string) => {
-    if (value === CUSTOM_FONT_VALUE) {
-      setUseCustomFont(true);
-      form.setValue("googleFontBody", "");
-    } else {
-      setUseCustomFont(false);
-      form.setValue("googleFontBody", value);
-    }
+  const applyToAll = (key: "font" | "color") => {
+    const breweryVal = form.getValues(`brewery.${key}`);
+    ELEMENTS.forEach(({ key: elKey }) => {
+      form.setValue(`${elKey}.${key}` as any, breweryVal);
+    });
   };
 
   if (isLoading) return <div className="p-8 text-center text-muted-foreground animate-pulse">Loading settings...</div>;
-
-  const currentFont = form.watch("googleFontBody");
-  const selectValue = useCustomFont ? CUSTOM_FONT_VALUE : (COMMON_FONTS.includes(currentFont) ? currentFont : CUSTOM_FONT_VALUE);
 
   return (
     <div className="space-y-8">
@@ -230,8 +349,8 @@ export function SettingsForm() {
               ref={fileInputRef}
               onChange={handleFileUpload}
             />
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
             >
@@ -244,58 +363,33 @@ export function SettingsForm() {
 
       <Card className="p-6">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="space-y-6">
-            <h3 className="text-xl font-bold border-b border-border/50 pb-4">Beer Text Style</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="textColor">Text Color</Label>
-                <div className="flex gap-3">
-                  <Input 
-                    id="textColor" 
-                    type="color" 
-                    className="w-14 p-1 cursor-pointer h-12" 
-                    {...form.register("textColor")} 
-                  />
-                  <Input 
-                    type="text" 
-                    className="flex-1" 
-                    {...form.register("textColor")} 
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Font</Label>
-                <Select value={selectValue} onValueChange={handleFontSelect}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose a font" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {COMMON_FONTS.map((font) => (
-                      <SelectItem key={font} value={font}>
-                        {font}
-                      </SelectItem>
-                    ))}
-                    <SelectItem value={CUSTOM_FONT_VALUE}>
-                      Custom Google Font...
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between border-b border-border/50 pb-4">
+              <h3 className="text-xl font-bold">Beer Text Styles</h3>
+              <div className="flex gap-2">
+                <Button type="button" variant="outline" size="sm" onClick={() => applyToAll("font")}>
+                  Apply Brewery Font to All
+                </Button>
+                <Button type="button" variant="outline" size="sm" onClick={() => applyToAll("color")}>
+                  Apply Brewery Color to All
+                </Button>
               </div>
             </div>
-            {useCustomFont && (
-              <div className="space-y-2">
-                <Label htmlFor="customFont">Google Font Name</Label>
-                <Input
-                  id="customFont"
-                  placeholder="e.g. Bangers, Righteous, Press Start 2P"
-                  value={form.watch("googleFontBody")}
-                  onChange={(e) => form.setValue("googleFontBody", e.target.value)}
+            <p className="text-sm text-muted-foreground">
+              Customize the font and color for each element displayed on the board.
+            </p>
+            <div className="space-y-3">
+              {ELEMENTS.map(({ key, label }) => (
+                <FontColorPicker
+                  key={key}
+                  label={label}
+                  fontValue={form.watch(`${key}.font` as any)}
+                  colorValue={form.watch(`${key}.color` as any)}
+                  onFontChange={(font) => form.setValue(`${key}.font` as any, font)}
+                  onColorChange={(color) => form.setValue(`${key}.color` as any, color)}
                 />
-                <p className="text-xs text-muted-foreground">
-                  Enter the exact name from Google Fonts (fonts.google.com)
-                </p>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
 
           <div className="space-y-6">
@@ -323,7 +417,7 @@ export function SettingsForm() {
             <p className="text-sm text-muted-foreground -mt-2">
               A dark overlay helps text stand out against busy background images.
             </p>
-            
+
             <div className="space-y-8">
               <div className="flex items-center justify-between">
                 <Label htmlFor="overlayEnabled" className="text-base">Enable Dark Overlay</Label>
