@@ -93,7 +93,7 @@ function FontColorPicker({
   }, [fontValue, isCommonFont]);
 
   const showCustom = manualCustom || (fontValue !== "" && !isCommonFont);
-  const selectValue = showCustom ? CUSTOM_FONT_VALUE : (isCommonFont ? fontValue : "");
+  const displayValue = showCustom ? CUSTOM_FONT_VALUE : (isCommonFont ? fontValue : undefined);
 
   return (
     <div className="border border-border/50 rounded-lg p-4 space-y-3">
@@ -101,30 +101,57 @@ function FontColorPicker({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1.5">
           <Label className="text-xs text-muted-foreground">Font</Label>
-          <Select
-            value={selectValue}
-            onValueChange={(val) => {
-              if (val === CUSTOM_FONT_VALUE) {
-                setManualCustom(true);
-                onFontChange("");
-              } else {
-                setManualCustom(false);
-                onFontChange(val);
-              }
-            }}
-          >
-            <SelectTrigger className="h-9" style={fontValue && !showCustom ? { fontFamily: `"${fontValue}", sans-serif` } : undefined}>
-              <SelectValue placeholder="Choose font" />
-            </SelectTrigger>
-            <SelectContent>
-              {COMMON_FONTS.map((font) => (
-                <SelectItem key={font} value={font}>
-                  <span style={{ fontFamily: `"${font}", sans-serif` }}>{font}</span>
-                </SelectItem>
-              ))}
-              <SelectItem value={CUSTOM_FONT_VALUE}>Custom...</SelectItem>
-            </SelectContent>
-          </Select>
+          {displayValue !== undefined ? (
+            <Select
+              key={displayValue}
+              defaultValue={displayValue}
+              onValueChange={(val) => {
+                if (val === CUSTOM_FONT_VALUE) {
+                  setManualCustom(true);
+                  onFontChange("");
+                } else {
+                  setManualCustom(false);
+                  onFontChange(val);
+                }
+              }}
+            >
+              <SelectTrigger className="h-9" style={fontValue && !showCustom ? { fontFamily: `"${fontValue}", sans-serif` } : undefined}>
+                <SelectValue placeholder="Choose font" />
+              </SelectTrigger>
+              <SelectContent>
+                {COMMON_FONTS.map((font) => (
+                  <SelectItem key={font} value={font}>
+                    <span style={{ fontFamily: `"${font}", sans-serif` }}>{font}</span>
+                  </SelectItem>
+                ))}
+                <SelectItem value={CUSTOM_FONT_VALUE}>Custom...</SelectItem>
+              </SelectContent>
+            </Select>
+          ) : (
+            <Select
+              onValueChange={(val) => {
+                if (val === CUSTOM_FONT_VALUE) {
+                  setManualCustom(true);
+                  onFontChange("");
+                } else {
+                  setManualCustom(false);
+                  onFontChange(val);
+                }
+              }}
+            >
+              <SelectTrigger className="h-9">
+                <SelectValue placeholder="Choose font" />
+              </SelectTrigger>
+              <SelectContent>
+                {COMMON_FONTS.map((font) => (
+                  <SelectItem key={font} value={font}>
+                    <span style={{ fontFamily: `"${font}", sans-serif` }}>{font}</span>
+                  </SelectItem>
+                ))}
+                <SelectItem value={CUSTOM_FONT_VALUE}>Custom...</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
           {showCustom && (
             <Input
               placeholder="Google Font name"
