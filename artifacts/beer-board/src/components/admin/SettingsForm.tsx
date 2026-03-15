@@ -75,13 +75,14 @@ export function SettingsForm() {
       setUseCustomFont(isCustom);
       form.reset({
         googleFontBody: font,
-        textColor: settings.textColor,
+        textColor: settings.textColor ?? "#ffffff",
         overlayEnabled: settings.overlayEnabled,
         overlayOpacity: settings.overlayOpacity,
         logoSizePercent: settings.logoSizePercent,
       });
     }
-  }, [settings, form]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings?.googleFontBody, settings?.textColor, settings?.overlayEnabled, settings?.overlayOpacity, settings?.logoSizePercent]);
 
   const onSubmit = async (data: SettingsFormValues) => {
     setIsSubmitting(true);
