@@ -4,7 +4,21 @@ import crypto from "crypto";
 
 const router: IRouter = Router();
 
-const tokens = new Set<string>();
+const SECRET = process.env.ADMIN_PASSWORD || "admin123";
+
+function createToken(): string {
+  const payload = Date.now().toString();
+  const hmac = crypto.createHmac("sha256", SECRET).update(payload).digest("hex");
+  return `${payload}.${hmac}`;
+}
+
+export function verifyToken(token: string): boolean {
+  const parts = token.split(".");
+  if (parts.length !== 2) return false;
+  const [payload, signature] = parts;
+  const expected = crypto.createHmac("sha256", SECRET).update(payload).digest("hex");
+  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+}
 
 router.post("/admin/login", async (req, res): Promise<void> => {
   const parsed = AdminLoginBody.safeParse(req.body);
@@ -20,14 +34,8 @@ router.post("/admin/login", async (req, res): Promise<void> => {
     return;
   }
 
-  const token = crypto.randomBytes(32).toString("hex");
-  tokens.add(token);
-
+  const token = createToken();
   res.json({ success: true, token });
 });
-
-export function verifyToken(token: string): boolean {
-  return tokens.has(token);
-}
 
 export default router;
