@@ -85,9 +85,15 @@ function FontColorPicker({
   onFontChange: (font: string) => void;
   onColorChange: (color: string) => void;
 }) {
-  const isCustom = fontValue ? !COMMON_FONTS.includes(fontValue) : false;
-  const [showCustom, setShowCustom] = useState(isCustom);
-  const selectValue = showCustom ? CUSTOM_FONT_VALUE : (COMMON_FONTS.includes(fontValue) ? fontValue : CUSTOM_FONT_VALUE);
+  const isCommonFont = COMMON_FONTS.includes(fontValue);
+  const [manualCustom, setManualCustom] = useState(false);
+
+  useEffect(() => {
+    if (isCommonFont) setManualCustom(false);
+  }, [fontValue, isCommonFont]);
+
+  const showCustom = manualCustom || (fontValue !== "" && !isCommonFont);
+  const selectValue = showCustom ? CUSTOM_FONT_VALUE : (isCommonFont ? fontValue : "");
 
   return (
     <div className="border border-border/50 rounded-lg p-4 space-y-3">
@@ -99,10 +105,10 @@ function FontColorPicker({
             value={selectValue}
             onValueChange={(val) => {
               if (val === CUSTOM_FONT_VALUE) {
-                setShowCustom(true);
+                setManualCustom(true);
                 onFontChange("");
               } else {
-                setShowCustom(false);
+                setManualCustom(false);
                 onFontChange(val);
               }
             }}
