@@ -5,7 +5,7 @@ import fs from "fs";
 import { eq } from "drizzle-orm";
 import { db, boardSettingsTable } from "@workspace/db";
 
-const uploadDir = path.resolve(import.meta.dirname, "..", "..", "..", "..", "uploads");
+const uploadDir = path.resolve(process.env["REPL_HOME"] || process.cwd(), "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
