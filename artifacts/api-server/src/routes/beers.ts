@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { eq, asc } from "drizzle-orm";
 import { db, beersTable } from "@workspace/db";
+import { requireAuth } from "../middleware/auth";
 import {
   CreateBeerBody,
   UpdateBeerBody,
@@ -21,7 +22,7 @@ router.get("/beers", async (_req, res): Promise<void> => {
   res.json(ListBeersResponse.parse(beers));
 });
 
-router.post("/beers", async (req, res): Promise<void> => {
+router.post("/beers", requireAuth, async (req, res): Promise<void> => {
   const parsed = CreateBeerBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -42,7 +43,7 @@ router.post("/beers", async (req, res): Promise<void> => {
   res.status(201).json(UpdateBeerResponse.parse(beer));
 });
 
-router.patch("/beers/reorder", async (req, res): Promise<void> => {
+router.patch("/beers/reorder", requireAuth, async (req, res): Promise<void> => {
   const parsed = ReorderBeersBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -60,7 +61,7 @@ router.patch("/beers/reorder", async (req, res): Promise<void> => {
   res.json({ success: true });
 });
 
-router.patch("/beers/:id", async (req, res): Promise<void> => {
+router.patch("/beers/:id", requireAuth, async (req, res): Promise<void> => {
   const params = UpdateBeerParams.safeParse(req.params);
   if (!params.success) {
     res.status(400).json({ error: params.error.message });
@@ -87,7 +88,7 @@ router.patch("/beers/:id", async (req, res): Promise<void> => {
   res.json(UpdateBeerResponse.parse(beer));
 });
 
-router.delete("/beers/:id", async (req, res): Promise<void> => {
+router.delete("/beers/:id", requireAuth, async (req, res): Promise<void> => {
   const params = DeleteBeerParams.safeParse(req.params);
   if (!params.success) {
     res.status(400).json({ error: params.error.message });

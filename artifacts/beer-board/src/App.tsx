@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import Board from "@/pages/Board";
 import Admin from "@/pages/Admin";
 import Login from "@/pages/Login";
+import ApiDocs from "@/pages/ApiDocs";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -69,6 +70,13 @@ function Home() {
             Admin Login
           </a>
         </div>
+
+        <a
+          href="/docs"
+          className="text-gray-400 hover:text-amber-400 text-sm transition-colors mt-2"
+        >
+          API Documentation
+        </a>
       </div>
     </div>
   );
@@ -81,6 +89,7 @@ function Router() {
       <Route path="/board" component={Board} />
       <Route path="/admin" component={Admin} />
       <Route path="/login" component={Login} />
+      <Route path="/docs" component={ApiDocs} />
       <Route component={NotFound} />
     </Switch>
   );

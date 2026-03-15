@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import { eq } from "drizzle-orm";
 import { db, boardSettingsTable } from "@workspace/db";
+import { requireAuth } from "../middleware/auth";
 
 const uploadDir = path.resolve(process.env["REPL_HOME"] || process.cwd(), "uploads");
 if (!fs.existsSync(uploadDir)) {
@@ -36,7 +37,7 @@ const upload = multer({
 
 const router: IRouter = Router();
 
-router.post("/upload/background", upload.single("image"), async (req, res): Promise<void> => {
+router.post("/upload/background", requireAuth, upload.single("image"), async (req, res): Promise<void> => {
   if (!req.file) {
     res.status(400).json({ error: "No file uploaded" });
     return;
@@ -81,7 +82,7 @@ const logoUpload = multer({
   },
 });
 
-router.post("/upload/logo", logoUpload.single("image"), async (req, res): Promise<void> => {
+router.post("/upload/logo", requireAuth, logoUpload.single("image"), async (req, res): Promise<void> => {
   if (!req.file) {
     res.status(400).json({ error: "No file uploaded" });
     return;
