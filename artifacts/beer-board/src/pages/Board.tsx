@@ -231,7 +231,7 @@ export default function Board() {
           width: "100%",
           display: "flex",
           flexDirection: "column",
-          padding: "20px 25px",
+          padding: "20px 12px 20px 25px",
         }}>
           <div style={{
             textAlign: "center",
