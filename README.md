@@ -1,8 +1,12 @@
 # Beer Board — Digital Tap List Display
 
-A full-stack digital beer board built for [Breakwater Barbecue](https://bbqboard.replit.app). Designed to run on a Fire TV Stick driving a wall-mounted TV in portrait orientation. Includes a mobile-friendly admin panel and a self-documenting REST API.
+A full-stack digital beer board built for Breakwater Barbecue. Designed to run on a Fire TV Stick driving a wall-mounted TV in portrait orientation. Includes a mobile-friendly admin panel and a self-documenting REST API.
 
-![Board Preview](attached_assets/Screenshot_2026-03-14_at_9.43.12_PM_1773549816163.png)
+<p align="center">
+  <img src="docs/board-display.png" alt="Board Display" height="400" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="docs/admin-settings.png" alt="Admin Settings" height="400" />
+</p>
 
 ---
 
@@ -173,14 +177,14 @@ NODE_ENV=production node artifacts/api-server/dist/index.cjs
    | Build Command | `pnpm run build:railway` |
    | Start Command | `pnpm start` |
 
-   But by default Railway will use `pnpm run build` + `pnpm start` from the root `package.json`, which handles everything.
+   By default Railway will use `pnpm run build` + `pnpm start` from the root `package.json`, which handles everything.
 
-5. **Generate a domain.** In the Railway service settings, go to **Settings → Networking → Generate Domain** to get a public URL (e.g., `https://beer-board-production.up.railway.app`).
+5. **Generate a domain.** In the Railway service settings, go to **Settings > Networking > Generate Domain** to get a public URL.
 
 6. Visit `/admin` to log in and start adding beers.
 
 ### Notes for Railway
-- The build command includes `drizzle-kit push` so the database schema is created/updated on every deploy.
+- The `build:railway` script includes `drizzle-kit push` so the database schema is created/updated on every deploy.
 - Uploaded images (background, logo) are stored in the `uploads/` directory. On Railway this is ephemeral storage — files are lost on redeploy. For persistent uploads, configure an S3-compatible object store and update the upload routes.
 - Railway's free tier includes a small Postgres instance which is more than enough for a beer board.
 
@@ -207,7 +211,7 @@ To display the board on a Fire TV Stick as a dedicated kiosk-style app, you have
 1. On the Fire TV, open **Amazon Silk Browser**.
 2. Navigate to your board URL: `https://your-domain.com/board`
 3. The browser will full-screen the page. The board auto-rotates content for portrait TVs.
-4. To prevent the screen from sleeping, enable **Settings → Display & Sounds → Screen Saver → Never**.
+4. To prevent the screen from sleeping, enable **Settings > Display & Sounds > Screen Saver > Never**.
 
 This works but the Fire TV can exit Silk unexpectedly. For a more robust setup, use Option B.
 
@@ -284,7 +288,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Keep screen on and go immersive full-screen
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         hideSystemUI();
 
@@ -363,10 +366,10 @@ After installing:
 1. The app appears in **Apps** on the Fire TV home screen.
 2. Launch it — the board loads full-screen in landscape. The web app handles the portrait rotation via CSS.
 3. On reboot, the `BootReceiver` auto-launches the app.
-4. To prevent Fire TV from going to sleep: **Settings → Display & Sounds → Screen Saver → Never**.
+4. To prevent Fire TV from going to sleep: **Settings > Display & Sounds > Screen Saver > Never**.
 
 #### Tips
-- Replace `https://your-domain.com/board` in `MainActivity.java` with your actual deployed URL (e.g., your Railway URL or custom domain).
+- Replace `https://your-domain.com/board` in `MainActivity.java` with your actual deployed URL.
 - The board rotation setting in the admin panel controls how the content is oriented. Set it to **270°** for a standard portrait TV mounted with the power cable at the top.
 - The board auto-refreshes every 30 seconds, so menu changes made in the admin panel appear on the TV within 30 seconds.
 - For offline resilience, the WebView caches the page. If the network drops briefly, the last-loaded board remains visible.
