@@ -14,4 +14,10 @@ app.use("/api/uploads", express.static(uploadDir));
 
 app.use("/api", router);
 
+const clientDistPath = path.resolve(process.cwd(), "artifacts/beer-board/dist/public");
+app.use(express.static(clientDistPath));
+app.get("*", (_req, res) => {
+  res.sendFile(path.join(clientDistPath, "index.html"));
+});
+
 export default app;
