@@ -169,6 +169,36 @@ export default function Board() {
       justifyContent: "center",
       overflow: "hidden",
     }}>
+      {bgImage && (
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }} />
+      )}
+
+      {!bgImage && (
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          background: "linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+        }} />
+      )}
+
+      {settings?.overlayEnabled && (
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 1,
+          background: "#000",
+          opacity: (settings.overlayOpacity ?? 60) / 100,
+        }} />
+      )}
+
       <div style={{
         width: boardW,
         height: boardH,
@@ -176,36 +206,9 @@ export default function Board() {
         transformOrigin: "center center",
         overflow: "hidden",
         color: textColor,
+        position: "relative",
+        zIndex: 2,
       }}>
-        {bgImage && (
-          <div style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 0,
-            backgroundImage: `url(${bgImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }} />
-        )}
-
-        {!bgImage && (
-          <div style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 0,
-            background: "linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
-          }} />
-        )}
-
-        {settings?.overlayEnabled && (
-          <div style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 1,
-            background: "#000",
-            opacity: (settings.overlayOpacity ?? 60) / 100,
-          }} />
-        )}
 
         <div style={{
           position: "relative",
