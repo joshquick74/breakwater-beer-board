@@ -10,21 +10,21 @@ type BeerRowProps = {
 };
 
 function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
-  const titleSize = compact ? 36 : 48;
-  const subSize = compact ? 24 : 32;
+  const titleSize = compact ? 28 : 36;
+  const subSize = compact ? 18 : 22;
 
   return (
     <div style={{
       display: "flex",
       alignItems: "baseline",
-      padding: compact ? "14px 0" : "20px 0",
+      padding: compact ? "10px 0" : "12px 0",
       borderBottom: "1px solid rgba(255,255,255,0.08)",
     }}>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
           display: "flex",
           alignItems: "baseline",
-          gap: compact ? 8 : 10,
+          gap: compact ? 6 : 8,
           flexWrap: "wrap",
         }}>
           <span style={{
@@ -217,11 +217,11 @@ export default function Board() {
           width: "100%",
           display: "flex",
           flexDirection: "column",
-          padding: "30px 25px",
+          padding: "20px 25px",
         }}>
           <div style={{
             textAlign: "center",
-            marginBottom: 30,
+            marginBottom: 16,
             flexShrink: 0,
           }}>
             <img
@@ -238,7 +238,7 @@ export default function Board() {
             <div style={{
               height: 3,
               background: `linear-gradient(to right, transparent, ${textColor}, transparent)`,
-              marginTop: 16,
+              marginTop: 10,
               width: "60%",
               marginLeft: "auto",
               marginRight: "auto",
