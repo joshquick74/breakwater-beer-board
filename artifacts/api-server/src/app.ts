@@ -14,7 +14,8 @@ app.use("/api/uploads", express.static(uploadDir));
 
 app.use("/api", router);
 
-const clientDistPath = path.resolve(process.cwd(), "artifacts/beer-board/dist/public");
+const clientDistPath = path.resolve(__dirname, "../../beer-board/dist/public");
+console.log("Serving static files from:", clientDistPath);
 app.use(express.static(clientDistPath));
 app.get("*", (_req, res) => {
   res.sendFile(path.join(clientDistPath, "index.html"));
