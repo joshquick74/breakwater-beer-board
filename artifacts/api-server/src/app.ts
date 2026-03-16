@@ -22,7 +22,7 @@ if (fs.existsSync(clientDistPath)) {
   console.log("Contents:", fs.readdirSync(clientDistPath));
 }
 app.use(express.static(clientDistPath));
-app.get("*", (_req, res) => {
+app.get("/{*path}", (_req, res) => {
   res.sendFile(path.join(clientDistPath, "index.html"));
 });
 
