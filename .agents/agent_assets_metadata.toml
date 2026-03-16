@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "Xy45VynQ3xxVNIUKyeK_m"
+uri = "file://README.md"
+type = "text"
+title = "Beer Board README"
