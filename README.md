@@ -166,14 +166,16 @@ NODE_ENV=production node artifacts/api-server/dist/index.cjs
    | `PORT` | `3000` *(Railway sets this automatically — only set if needed)* |
    | `NODE_ENV` | `production` |
 
-4. **Configure build and start commands** in Railway settings:
+4. **Deploy.** Railway auto-detects the `start` script from `package.json`. If you want to customize, you can set these in Railway settings:
 
    | Setting | Value |
    |---------|-------|
-   | Build Command | `pnpm install && pnpm run build && cd lib/db && npx drizzle-kit push --force` |
-   | Start Command | `node artifacts/api-server/dist/index.cjs` |
+   | Build Command | `pnpm run build:railway` |
+   | Start Command | `pnpm start` |
 
-5. **Deploy.** Railway will run the build, push the DB schema, and start the server. The app will be available at your Railway-provided URL (e.g., `https://beer-board-production.up.railway.app`).
+   But by default Railway will use `pnpm run build` + `pnpm start` from the root `package.json`, which handles everything.
+
+5. **Generate a domain.** In the Railway service settings, go to **Settings → Networking → Generate Domain** to get a public URL (e.g., `https://beer-board-production.up.railway.app`).
 
 6. Visit `/admin` to log in and start adding beers.
 
