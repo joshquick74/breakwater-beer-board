@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback, useRef, useLayoutEffect } from "react";
 import { useListBeers, useGetSettings } from "@workspace/api-client-react";
 import { useDynamicFonts } from "@/hooks/use-fonts";
 
@@ -10,49 +10,63 @@ type BeerRowProps = {
 };
 
 function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
-  const titleSize = compact ? 28 : 36;
-  const subSize = compact ? 18 : 22;
+  const maxTitleSize = compact ? 28 : 36;
+  const minTitleSize = compact ? 16 : 18;
+  const subSize = compact ? 22 : 28;
+  const [titleSize, setTitleSize] = useState(maxTitleSize);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const el = titleRef.current;
+    if (!el) return;
+    let size = maxTitleSize;
+    el.style.fontSize = `${size}px`;
+    while (el.scrollWidth > el.clientWidth && size > minTitleSize) {
+      size -= 1;
+      el.style.fontSize = `${size}px`;
+    }
+    setTitleSize(size);
+  }, [beer.brewery, beer.beerName, fonts.breweryFont, fonts.beerNameFont, maxTitleSize, minTitleSize]);
 
   return (
-    <div style={{
+    <div ref={rowRef} style={{
       display: "flex",
       alignItems: "baseline",
-      padding: compact ? "10px 0" : "12px 0",
+      padding: compact ? "8px 0" : "10px 0",
       borderBottom: "1px solid rgba(255,255,255,0.08)",
     }}>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{
-          display: "flex",
-          alignItems: "baseline",
-          gap: compact ? 6 : 8,
-          flexWrap: "wrap",
-        }}>
-          <span style={{
-            fontFamily: `"${fonts.breweryFont}", sans-serif`,
+        <div
+          ref={titleRef}
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: compact ? 6 : 8,
+            flexWrap: "nowrap",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
             fontSize: titleSize,
             fontWeight: 700,
             lineHeight: 1.2,
             textTransform: "uppercase",
             letterSpacing: "0.01em",
+          }}
+        >
+          <span style={{
+            fontFamily: `"${fonts.breweryFont}", sans-serif`,
             color: colors.breweryColor,
           }}>
             {beer.brewery}
           </span>
           <span style={{
             fontFamily: `"${fonts.breweryFont}", sans-serif`,
-            fontSize: titleSize,
-            fontWeight: 700,
             color: colors.breweryColor,
           }}>
             -
           </span>
           <span style={{
             fontFamily: `"${fonts.beerNameFont}", sans-serif`,
-            fontSize: titleSize,
-            fontWeight: 700,
-            lineHeight: 1.2,
-            textTransform: "uppercase",
-            letterSpacing: "0.01em",
             color: colors.beerNameColor,
           }}>
             {beer.beerName}
