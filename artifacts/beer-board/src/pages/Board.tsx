@@ -29,10 +29,13 @@ function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
     setTitleSize(size);
   }, [beer.brewery, beer.beerName, fonts.breweryFont, fonts.beerNameFont, maxTitleSize, minTitleSize]);
 
+  const priceSize = compact ? 44 : 56;
+  const subSizeFinal = compact ? 24 : 30;
+
   return (
     <div ref={rowRef} style={{
       display: "flex",
-      alignItems: "baseline",
+      alignItems: "center",
       padding: compact ? "8px 0" : "10px 0",
       borderBottom: "1px solid rgba(255,255,255,0.08)",
     }}>
@@ -83,15 +86,15 @@ function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
         }}>
           <span style={{
             fontFamily: `"${fonts.styleFont}", sans-serif`,
-            fontSize: subSize,
+            fontSize: subSizeFinal,
             color: colors.styleColor,
           }}>
             {beer.style}
           </span>
-          <span style={{ fontFamily: `"${fonts.styleFont}", sans-serif`, fontSize: subSize, color: colors.styleColor }}>-</span>
+          <span style={{ fontFamily: `"${fonts.styleFont}", sans-serif`, fontSize: subSizeFinal, color: colors.styleColor }}>-</span>
           <span style={{
             fontFamily: `"${fonts.abvFont}", sans-serif`,
-            fontSize: subSize,
+            fontSize: subSizeFinal,
             color: colors.abvColor,
           }}>
             {beer.abv}
@@ -100,12 +103,13 @@ function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
       </div>
       <div style={{
         fontFamily: `"${fonts.priceFont}", sans-serif`,
-        fontSize: titleSize,
+        fontSize: priceSize,
         fontWeight: 700,
         flexShrink: 0,
         paddingLeft: compact ? 12 : 20,
         textAlign: "right",
         color: colors.priceColor,
+        lineHeight: 1,
       }}>
         {beer.price}
       </div>
