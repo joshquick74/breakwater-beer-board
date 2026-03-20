@@ -5,6 +5,10 @@ import fs from "fs";
 import router from "./routes";
 import { uploadDir } from "./routes/upload";
 
+const currentDir = typeof __dirname !== "undefined"
+  ? __dirname
+  : path.dirname(new URL(import.meta.url).pathname);
+
 const app: Express = express();
 
 app.use(cors());
@@ -15,15 +19,12 @@ app.use("/api/uploads", express.static(uploadDir));
 
 app.use("/api", router);
 
-const clientDistPath = path.resolve(__dirname, "../../beer-board/dist/public");
-console.log("Serving static files from:", clientDistPath);
-console.log("Directory exists:", fs.existsSync(clientDistPath));
+const clientDistPath = path.resolve(currentDir, "../../beer-board/dist/public");
 if (fs.existsSync(clientDistPath)) {
-  console.log("Contents:", fs.readdirSync(clientDistPath));
+  app.use(express.static(clientDistPath));
+  app.get("/{*path}", (_req, res) => {
+    res.sendFile(path.join(clientDistPath, "index.html"));
+  });
 }
-app.use(express.static(clientDistPath));
-app.get("/{*path}", (_req, res) => {
-  res.sendFile(path.join(clientDistPath, "index.html"));
-});
 
 export default app;

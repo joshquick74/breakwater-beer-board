@@ -24,8 +24,9 @@ if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-runMigrations().then(() => {
-  app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server listening on port ${port}`);
+  runMigrations().catch((e) => {
+    console.warn("Migration warning:", (e as Error).message);
   });
 });
