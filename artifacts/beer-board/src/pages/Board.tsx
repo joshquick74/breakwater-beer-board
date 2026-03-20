@@ -10,9 +10,8 @@ type BeerRowProps = {
 };
 
 function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
-  const maxTitleSize = compact ? 28 : 36;
-  const minTitleSize = compact ? 16 : 18;
-  const subSize = compact ? 22 : 28;
+  const maxTitleSize = compact ? 24 : 36;
+  const minTitleSize = compact ? 14 : 18;
   const [titleSize, setTitleSize] = useState(maxTitleSize);
   const titleRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
@@ -29,8 +28,8 @@ function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
     setTitleSize(size);
   }, [beer.brewery, beer.beerName, fonts.breweryFont, fonts.beerNameFont, maxTitleSize, minTitleSize]);
 
-  const priceSize = compact ? 44 : 56;
-  const subSizeFinal = compact ? 24 : 30;
+  const priceSize = compact ? 36 : 56;
+  const subSizeFinal = compact ? 18 : 30;
 
   return (
     <div ref={rowRef} style={{
@@ -281,7 +280,7 @@ export default function Board() {
                 background: breweryColor,
                 opacity: 0.35,
                 flexShrink: 0,
-                margin: "0 30px",
+                margin: "0 16px",
               }} />
               <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                 {rightColumn.map((beer) => (
