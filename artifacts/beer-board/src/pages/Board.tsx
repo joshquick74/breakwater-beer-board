@@ -10,8 +10,8 @@ type BeerRowProps = {
 };
 
 function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
-  const maxTitleSize = compact ? 24 : 36;
-  const minTitleSize = compact ? 14 : 18;
+  const maxTitleSize = compact ? 32 : 36;
+  const minTitleSize = compact ? 18 : 18;
   const [titleSize, setTitleSize] = useState(maxTitleSize);
   const titleRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
@@ -28,8 +28,8 @@ function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
     setTitleSize(size);
   }, [beer.brewery, beer.beerName, fonts.breweryFont, fonts.beerNameFont, maxTitleSize, minTitleSize]);
 
-  const priceSize = compact ? 36 : 56;
-  const subSizeFinal = compact ? 18 : 30;
+  const priceSize = compact ? 50 : 56;
+  const subSizeFinal = compact ? 26 : 30;
 
   return (
     <div ref={rowRef} style={{
@@ -270,7 +270,7 @@ export default function Board() {
               gap: 0,
               overflow: "hidden",
             }}>
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+              <div style={{ flex: 1, minWidth: 0, overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                 {leftColumn.map((beer) => (
                   <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact />
                 ))}
@@ -282,7 +282,7 @@ export default function Board() {
                 flexShrink: 0,
                 margin: "0 16px",
               }} />
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+              <div style={{ flex: 1, minWidth: 0, overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                 {rightColumn.map((beer) => (
                   <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact />
                 ))}
