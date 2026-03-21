@@ -10,8 +10,8 @@ type BeerRowProps = {
 };
 
 function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
-  const maxTitleSize = compact ? 32 : 36;
-  const minTitleSize = compact ? 18 : 18;
+  const maxTitleSize = 36;
+  const minTitleSize = 18;
   const [titleSize, setTitleSize] = useState(maxTitleSize);
   const titleRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
@@ -28,14 +28,14 @@ function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
     setTitleSize(size);
   }, [beer.brewery, beer.beerName, fonts.breweryFont, fonts.beerNameFont, maxTitleSize, minTitleSize]);
 
-  const priceSize = compact ? 50 : 56;
-  const subSizeFinal = compact ? 26 : 30;
+  const priceSize = 56;
+  const subSizeFinal = 30;
 
   return (
     <div ref={rowRef} style={{
       display: "flex",
       alignItems: "center",
-      padding: compact ? "8px 0" : "10px 0",
+      padding: "10px 0",
       borderBottom: "1px solid rgba(255,255,255,0.08)",
     }}>
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -44,7 +44,7 @@ function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
           style={{
             display: "flex",
             alignItems: "baseline",
-            gap: compact ? 6 : 8,
+            gap: 8,
             flexWrap: "nowrap",
             whiteSpace: "nowrap",
             overflow: "hidden",
@@ -105,7 +105,7 @@ function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
         fontSize: priceSize,
         fontWeight: 700,
         flexShrink: 0,
-        paddingLeft: compact ? 12 : 20,
+        paddingLeft: 20,
         textAlign: "right",
         color: colors.priceColor,
         lineHeight: 1,
@@ -270,7 +270,7 @@ export default function Board() {
               gap: 0,
               overflow: "hidden",
             }}>
-              <div style={{ flex: 1, minWidth: 0, overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+              <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                 {leftColumn.map((beer) => (
                   <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact />
                 ))}
@@ -282,7 +282,7 @@ export default function Board() {
                 flexShrink: 0,
                 margin: "0 16px",
               }} />
-              <div style={{ flex: 1, minWidth: 0, overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+              <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                 {rightColumn.map((beer) => (
                   <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact />
                 ))}
