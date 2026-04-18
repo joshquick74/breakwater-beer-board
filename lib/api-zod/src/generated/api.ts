@@ -123,6 +123,7 @@ export const GetSettingsResponse = zod.object({
   ]),
   manualTitleSizeEnabled: zod.boolean(),
   manualTitleSize: zod.number(),
+  priceSize: zod.number(),
 });
 
 /**
@@ -157,6 +158,7 @@ export const UpdateSettingsBody = zod.object({
     .optional(),
   manualTitleSizeEnabled: zod.boolean().optional(),
   manualTitleSize: zod.number().optional(),
+  priceSize: zod.number().optional(),
 });
 
 export const UpdateSettingsResponse = zod.object({
@@ -189,6 +191,7 @@ export const UpdateSettingsResponse = zod.object({
   ]),
   manualTitleSizeEnabled: zod.boolean(),
   manualTitleSize: zod.number(),
+  priceSize: zod.number(),
 });
 
 /**

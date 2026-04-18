@@ -382,6 +382,8 @@ components:
           type: boolean
         manualTitleSize:
           type: integer
+        priceSize:
+          type: integer
       required:
         - id
         - headerTitle
@@ -405,6 +407,7 @@ components:
         - boardRotation
         - manualTitleSizeEnabled
         - manualTitleSize
+        - priceSize
     UpdateSettingsBody:
       type: object
       properties:
@@ -450,6 +453,8 @@ components:
         manualTitleSizeEnabled:
           type: boolean
         manualTitleSize:
+          type: integer
+        priceSize:
           type: integer
     LoginBody:
       type: object

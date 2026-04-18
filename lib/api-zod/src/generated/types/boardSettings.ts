@@ -34,4 +34,5 @@ export interface BoardSettings {
   boardRotation: BoardSettingsBoardRotation;
   manualTitleSizeEnabled: boolean;
   manualTitleSize: number;
+  priceSize: number;
 }

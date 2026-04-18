@@ -82,6 +82,7 @@ export interface BoardSettings {
   boardRotation: BoardSettingsBoardRotation;
   manualTitleSizeEnabled: boolean;
   manualTitleSize: number;
+  priceSize: number;
 }
 
 export type UpdateSettingsBodyBoardRotation =
@@ -116,6 +117,7 @@ export interface UpdateSettingsBody {
   boardRotation?: UpdateSettingsBodyBoardRotation;
   manualTitleSizeEnabled?: boolean;
   manualTitleSize?: number;
+  priceSize?: number;
 }
 
 export interface LoginBody {
