@@ -17,15 +17,33 @@ function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
   const rowRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    const el = titleRef.current;
-    if (!el) return;
-    let size = maxTitleSize;
-    el.style.fontSize = `${size}px`;
-    while (el.scrollWidth > el.clientWidth && size > minTitleSize) {
-      size -= 1;
+    const fit = () => {
+      const el = titleRef.current;
+      if (!el) return;
+      let size = maxTitleSize;
       el.style.fontSize = `${size}px`;
-    }
-    setTitleSize(size);
+      while (el.scrollWidth > el.clientWidth && size > minTitleSize) {
+        size -= 1;
+        el.style.fontSize = `${size}px`;
+      }
+      setTitleSize(size);
+    };
+
+    fit();
+
+    let cancelled = false;
+    const reFit = () => { if (!cancelled) fit(); };
+    document.fonts?.ready.then(reFit);
+    document.fonts?.addEventListener?.("loadingdone", reFit);
+
+    const ro = new ResizeObserver(reFit);
+    if (rowRef.current) ro.observe(rowRef.current);
+
+    return () => {
+      cancelled = true;
+      document.fonts?.removeEventListener?.("loadingdone", reFit);
+      ro.disconnect();
+    };
   }, [beer.brewery, beer.beerName, fonts.breweryFont, fonts.beerNameFont, maxTitleSize, minTitleSize]);
 
   const priceSize = compact ? 40 : 68;
