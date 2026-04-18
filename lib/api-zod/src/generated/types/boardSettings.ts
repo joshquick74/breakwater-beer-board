@@ -32,4 +32,6 @@ export interface BoardSettings {
   priceFont: string;
   priceColor: string;
   boardRotation: BoardSettingsBoardRotation;
+  manualTitleSizeEnabled: boolean;
+  manualTitleSize: number;
 }

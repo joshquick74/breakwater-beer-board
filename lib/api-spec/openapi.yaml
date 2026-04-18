@@ -378,6 +378,10 @@ components:
         boardRotation:
           type: integer
           enum: [0, 90, 180, 270]
+        manualTitleSizeEnabled:
+          type: boolean
+        manualTitleSize:
+          type: integer
       required:
         - id
         - headerTitle
@@ -399,6 +403,8 @@ components:
         - priceFont
         - priceColor
         - boardRotation
+        - manualTitleSizeEnabled
+        - manualTitleSize
     UpdateSettingsBody:
       type: object
       properties:
@@ -441,6 +447,10 @@ components:
         boardRotation:
           type: integer
           enum: [0, 90, 180, 270]
+        manualTitleSizeEnabled:
+          type: boolean
+        manualTitleSize:
+          type: integer
     LoginBody:
       type: object
       properties:
