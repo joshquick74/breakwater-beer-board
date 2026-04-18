@@ -66,6 +66,7 @@ const settingsSchema = z.object({
   boardRotation: z.number(),
   manualTitleSizeEnabled: z.boolean(),
   manualTitleSize: z.number().min(12).max(120),
+  priceSize: z.number().min(18).max(160),
   brewery: elementStyleSchema,
   beerName: elementStyleSchema,
   style: elementStyleSchema,
@@ -81,12 +82,20 @@ function FontColorPicker({
   colorValue,
   onFontChange,
   onColorChange,
+  sizeValue,
+  onSizeChange,
+  sizeMin,
+  sizeMax,
 }: {
   label: string;
   fontValue: string;
   colorValue: string;
   onFontChange: (font: string) => void;
   onColorChange: (color: string) => void;
+  sizeValue?: number;
+  onSizeChange?: (size: number) => void;
+  sizeMin?: number;
+  sizeMax?: number;
 }) {
   const isCommonFont = COMMON_FONTS.includes(fontValue);
   const [manualCustom, setManualCustom] = useState(false);
@@ -182,6 +191,21 @@ function FontColorPicker({
           </div>
         </div>
       </div>
+      {sizeValue !== undefined && onSizeChange && (
+        <div className="space-y-1.5 pt-1">
+          <div className="flex justify-between">
+            <Label className="text-xs text-muted-foreground">Font Size</Label>
+            <span className="font-mono text-xs text-muted-foreground">{sizeValue}px</span>
+          </div>
+          <Slider
+            value={[sizeValue]}
+            min={sizeMin ?? 18}
+            max={sizeMax ?? 120}
+            step={1}
+            onValueChange={([val]) => onSizeChange(val)}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -212,6 +236,7 @@ export function SettingsForm() {
       boardRotation: settings.boardRotation ?? 270,
       manualTitleSizeEnabled: settings.manualTitleSizeEnabled ?? false,
       manualTitleSize: settings.manualTitleSize ?? 52,
+      priceSize: settings.priceSize ?? 68,
       brewery: { font: settings.breweryFont || fallbackFont, color: settings.breweryColor || fallbackColor },
       beerName: { font: settings.beerNameFont || fallbackFont, color: settings.beerNameColor || fallbackColor },
       style: { font: settings.styleFont || fallbackFont, color: settings.styleColor || fallbackColor },
@@ -229,6 +254,7 @@ export function SettingsForm() {
       boardRotation: 270,
       manualTitleSizeEnabled: false,
       manualTitleSize: 52,
+      priceSize: 68,
       brewery: { font: defaultFont, color: defaultColor },
       beerName: { font: defaultFont, color: defaultColor },
       style: { font: defaultFont, color: defaultColor },
@@ -249,6 +275,7 @@ export function SettingsForm() {
           boardRotation: data.boardRotation,
           manualTitleSizeEnabled: data.manualTitleSizeEnabled,
           manualTitleSize: data.manualTitleSize,
+          priceSize: data.priceSize,
           breweryFont: data.brewery.font,
           breweryColor: data.brewery.color,
           beerNameFont: data.beerName.font,
@@ -435,6 +462,10 @@ export function SettingsForm() {
                   colorValue={form.watch(`${key}.color` as any)}
                   onFontChange={(font) => form.setValue(`${key}.font` as any, font)}
                   onColorChange={(color) => form.setValue(`${key}.color` as any, color)}
+                  sizeValue={key === "price" ? form.watch("priceSize") : undefined}
+                  onSizeChange={key === "price" ? (size) => form.setValue("priceSize", size) : undefined}
+                  sizeMin={key === "price" ? 24 : undefined}
+                  sizeMax={key === "price" ? 120 : undefined}
                 />
               ))}
             </div>

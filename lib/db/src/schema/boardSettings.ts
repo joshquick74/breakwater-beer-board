@@ -27,6 +27,7 @@ export const boardSettingsTable = pgTable("board_settings", {
   boardRotation: integer("board_rotation").notNull().default(270),
   manualTitleSizeEnabled: boolean("manual_title_size_enabled").notNull().default(false),
   manualTitleSize: integer("manual_title_size").notNull().default(52),
+  priceSize: integer("price_size").notNull().default(68),
 });
 
 export const insertBoardSettingsSchema = createInsertSchema(boardSettingsTable).omit({ id: true });

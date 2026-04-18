@@ -8,9 +8,10 @@ type BeerRowProps = {
   colors: { breweryColor: string; beerNameColor: string; styleColor: string; abvColor: string; priceColor: string };
   compact?: boolean;
   manualTitleSize?: number;
+  priceSize?: number;
 };
 
-function BeerRow({ beer, fonts, colors, compact, manualTitleSize }: BeerRowProps) {
+function BeerRow({ beer, fonts, colors, compact, manualTitleSize, priceSize: priceSizeOverride }: BeerRowProps) {
   const maxTitleSize = compact ? 28 : 52;
   const minTitleSize = compact ? 14 : 22;
   const [titleSize, setTitleSize] = useState(manualTitleSize ?? maxTitleSize);
@@ -52,7 +53,7 @@ function BeerRow({ beer, fonts, colors, compact, manualTitleSize }: BeerRowProps
     };
   }, [beer.brewery, beer.beerName, fonts.breweryFont, fonts.beerNameFont, maxTitleSize, minTitleSize, manualTitleSize]);
 
-  const priceSize = compact ? 40 : 68;
+  const priceSize = priceSizeOverride ?? (compact ? 40 : 68);
   const subSizeFinal = compact ? 22 : 36;
 
   return (
@@ -171,6 +172,7 @@ export default function Board() {
   const bgImage = settings?.backgroundImageUrl || undefined;
   const boardRotation = settings?.boardRotation ?? 270;
   const manualTitleSize = settings?.manualTitleSizeEnabled ? settings?.manualTitleSize : undefined;
+  const priceSize = settings?.priceSize;
 
   const isLandscape = boardRotation === 0 || boardRotation === 180;
   const isRotated = boardRotation === 90 || boardRotation === 270;
@@ -297,7 +299,7 @@ export default function Board() {
             }}>
               <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                 {leftColumn.map((beer) => (
-                  <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact manualTitleSize={manualTitleSize} />
+                  <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact manualTitleSize={manualTitleSize} priceSize={priceSize} />
                 ))}
               </div>
               <div style={{
@@ -309,7 +311,7 @@ export default function Board() {
               }} />
               <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                 {rightColumn.map((beer) => (
-                  <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact manualTitleSize={manualTitleSize} />
+                  <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact manualTitleSize={manualTitleSize} priceSize={priceSize} />
                 ))}
               </div>
               {availableBeers.length === 0 && (
@@ -336,7 +338,7 @@ export default function Board() {
               gap: 0,
             }}>
               {availableBeers.map((beer) => (
-                <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} manualTitleSize={manualTitleSize} />
+                <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} manualTitleSize={manualTitleSize} priceSize={priceSize} />
               ))}
 
               {availableBeers.length === 0 && (
