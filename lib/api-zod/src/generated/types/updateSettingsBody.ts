@@ -27,4 +27,6 @@ export interface UpdateSettingsBody {
   priceFont?: string;
   priceColor?: string;
   boardRotation?: UpdateSettingsBodyBoardRotation;
+  manualTitleSizeEnabled?: boolean;
+  manualTitleSize?: number;
 }

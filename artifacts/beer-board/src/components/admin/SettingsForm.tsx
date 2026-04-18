@@ -13,6 +13,7 @@ import { useGetSettings, useUpdateSettings, getGetSettingsQueryKey } from "@work
 import { useQueryClient } from "@tanstack/react-query";
 import { getAuthHeaders } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Upload, Image as ImageIcon, ImagePlus, Monitor, RotateCw } from "lucide-react";
 import { useDynamicFonts } from "@/hooks/use-fonts";
 
@@ -63,6 +64,8 @@ const settingsSchema = z.object({
   overlayOpacity: z.number().min(0).max(100),
   logoSizePercent: z.number().min(10).max(200),
   boardRotation: z.number(),
+  manualTitleSizeEnabled: z.boolean(),
+  manualTitleSize: z.number().min(12).max(120),
   brewery: elementStyleSchema,
   beerName: elementStyleSchema,
   style: elementStyleSchema,
@@ -207,6 +210,8 @@ export function SettingsForm() {
       overlayOpacity: settings.overlayOpacity,
       logoSizePercent: settings.logoSizePercent,
       boardRotation: settings.boardRotation ?? 270,
+      manualTitleSizeEnabled: settings.manualTitleSizeEnabled ?? false,
+      manualTitleSize: settings.manualTitleSize ?? 52,
       brewery: { font: settings.breweryFont || fallbackFont, color: settings.breweryColor || fallbackColor },
       beerName: { font: settings.beerNameFont || fallbackFont, color: settings.beerNameColor || fallbackColor },
       style: { font: settings.styleFont || fallbackFont, color: settings.styleColor || fallbackColor },
@@ -222,6 +227,8 @@ export function SettingsForm() {
       overlayOpacity: 60,
       logoSizePercent: 100,
       boardRotation: 270,
+      manualTitleSizeEnabled: false,
+      manualTitleSize: 52,
       brewery: { font: defaultFont, color: defaultColor },
       beerName: { font: defaultFont, color: defaultColor },
       style: { font: defaultFont, color: defaultColor },
@@ -240,6 +247,8 @@ export function SettingsForm() {
           overlayOpacity: data.overlayOpacity,
           logoSizePercent: data.logoSizePercent,
           boardRotation: data.boardRotation,
+          manualTitleSizeEnabled: data.manualTitleSizeEnabled,
+          manualTitleSize: data.manualTitleSize,
           breweryFont: data.brewery.font,
           breweryColor: data.brewery.color,
           beerNameFont: data.beerName.font,
@@ -428,6 +437,38 @@ export function SettingsForm() {
                   onColorChange={(color) => form.setValue(`${key}.color` as any, color)}
                 />
               ))}
+            </div>
+
+            <div className="border border-border/50 rounded-lg p-4 space-y-3">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="manualTitleSizeEnabled"
+                  checked={form.watch("manualTitleSizeEnabled")}
+                  onCheckedChange={(checked) => form.setValue("manualTitleSizeEnabled", checked === true)}
+                  className="mt-0.5"
+                />
+                <div className="space-y-1">
+                  <Label htmlFor="manualTitleSizeEnabled" className="text-sm font-semibold cursor-pointer">
+                    Override auto-shrink for Brewery / Beer Name
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    By default, the brewery + beer name line shrinks to fit. Enable this to force a fixed size (long names will be clipped).
+                  </p>
+                </div>
+              </div>
+              <div className={form.watch("manualTitleSizeEnabled") ? "opacity-100" : "opacity-40 pointer-events-none"}>
+                <div className="flex justify-between mb-2">
+                  <Label>Title Font Size</Label>
+                  <span className="font-mono text-sm">{form.watch("manualTitleSize")}px</span>
+                </div>
+                <Slider
+                  value={[form.watch("manualTitleSize")]}
+                  min={18}
+                  max={96}
+                  step={1}
+                  onValueChange={([val]) => form.setValue("manualTitleSize", val)}
+                />
+              </div>
             </div>
           </div>
 

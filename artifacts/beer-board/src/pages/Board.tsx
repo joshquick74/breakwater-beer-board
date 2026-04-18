@@ -7,16 +7,22 @@ type BeerRowProps = {
   fonts: { breweryFont: string; beerNameFont: string; styleFont: string; abvFont: string; priceFont: string };
   colors: { breweryColor: string; beerNameColor: string; styleColor: string; abvColor: string; priceColor: string };
   compact?: boolean;
+  manualTitleSize?: number;
 };
 
-function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
+function BeerRow({ beer, fonts, colors, compact, manualTitleSize }: BeerRowProps) {
   const maxTitleSize = compact ? 28 : 52;
   const minTitleSize = compact ? 14 : 22;
-  const [titleSize, setTitleSize] = useState(maxTitleSize);
+  const [titleSize, setTitleSize] = useState(manualTitleSize ?? maxTitleSize);
   const titleRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
+    if (manualTitleSize != null) {
+      setTitleSize(manualTitleSize);
+      return;
+    }
+
     const fit = () => {
       const el = titleRef.current;
       if (!el) return;
@@ -44,7 +50,7 @@ function BeerRow({ beer, fonts, colors, compact }: BeerRowProps) {
       document.fonts?.removeEventListener?.("loadingdone", reFit);
       ro.disconnect();
     };
-  }, [beer.brewery, beer.beerName, fonts.breweryFont, fonts.beerNameFont, maxTitleSize, minTitleSize]);
+  }, [beer.brewery, beer.beerName, fonts.breweryFont, fonts.beerNameFont, maxTitleSize, minTitleSize, manualTitleSize]);
 
   const priceSize = compact ? 40 : 68;
   const subSizeFinal = compact ? 22 : 36;
@@ -164,6 +170,7 @@ export default function Board() {
   const textColor = settings?.textColor || "#ffffff";
   const bgImage = settings?.backgroundImageUrl || undefined;
   const boardRotation = settings?.boardRotation ?? 270;
+  const manualTitleSize = settings?.manualTitleSizeEnabled ? settings?.manualTitleSize : undefined;
 
   const isLandscape = boardRotation === 0 || boardRotation === 180;
   const isRotated = boardRotation === 90 || boardRotation === 270;
@@ -290,7 +297,7 @@ export default function Board() {
             }}>
               <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                 {leftColumn.map((beer) => (
-                  <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact />
+                  <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact manualTitleSize={manualTitleSize} />
                 ))}
               </div>
               <div style={{
@@ -302,7 +309,7 @@ export default function Board() {
               }} />
               <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                 {rightColumn.map((beer) => (
-                  <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact />
+                  <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} compact manualTitleSize={manualTitleSize} />
                 ))}
               </div>
               {availableBeers.length === 0 && (
@@ -329,7 +336,7 @@ export default function Board() {
               gap: 0,
             }}>
               {availableBeers.map((beer) => (
-                <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} />
+                <BeerRow key={beer.id} beer={beer} fonts={{ breweryFont, beerNameFont, styleFont, abvFont, priceFont }} colors={{ breweryColor, beerNameColor, styleColor, abvColor, priceColor }} manualTitleSize={manualTitleSize} />
               ))}
 
               {availableBeers.length === 0 && (

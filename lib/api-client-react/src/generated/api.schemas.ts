@@ -80,6 +80,8 @@ export interface BoardSettings {
   priceFont: string;
   priceColor: string;
   boardRotation: BoardSettingsBoardRotation;
+  manualTitleSizeEnabled: boolean;
+  manualTitleSize: number;
 }
 
 export type UpdateSettingsBodyBoardRotation =
@@ -112,6 +114,8 @@ export interface UpdateSettingsBody {
   priceFont?: string;
   priceColor?: string;
   boardRotation?: UpdateSettingsBodyBoardRotation;
+  manualTitleSizeEnabled?: boolean;
+  manualTitleSize?: number;
 }
 
 export interface LoginBody {
