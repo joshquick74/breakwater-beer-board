@@ -108,38 +108,47 @@ export function BeerForm({ open, onOpenChange, beer }: BeerFormProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="w-[95vw] max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{beer ? "Edit Beer" : "Add New Beer"}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-4">
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="tapNumber">Tap Number</Label>
               <Input
                 id="tapNumber"
                 type="number"
+                inputMode="numeric"
+                className="h-11 sm:h-10"
                 {...form.register("tapNumber")}
               />
               {form.formState.errors.tapNumber && (
                 <p className="text-sm text-destructive">{form.formState.errors.tapNumber.message}</p>
               )}
             </div>
-            <div className="space-y-2 flex flex-col justify-end pb-2">
-              <div className="flex items-center gap-3">
-                <Switch
-                  id="available"
-                  checked={form.watch("available")}
-                  onCheckedChange={(checked) => form.setValue("available", checked)}
-                />
-                <Label htmlFor="available" className="cursor-pointer">Currently Available</Label>
-              </div>
+            <div className="flex items-center gap-3 rounded-md border border-border bg-secondary/30 px-3 py-3 sm:py-2 sm:self-end">
+              <Switch
+                id="available"
+                checked={form.watch("available")}
+                onCheckedChange={(checked) => form.setValue("available", checked)}
+              />
+              <Label htmlFor="available" className="cursor-pointer text-sm font-medium">
+                Currently Available
+              </Label>
             </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="brewery">Brewery</Label>
-            <Input id="brewery" {...form.register("brewery")} placeholder="e.g. Russian River" />
+            <Input
+              id="brewery"
+              autoCapitalize="words"
+              autoComplete="off"
+              className="h-11 sm:h-10"
+              placeholder="e.g. Russian River"
+              {...form.register("brewery")}
+            />
             {form.formState.errors.brewery && (
               <p className="text-sm text-destructive">{form.formState.errors.brewery.message}</p>
             )}
@@ -147,41 +156,78 @@ export function BeerForm({ open, onOpenChange, beer }: BeerFormProps) {
 
           <div className="space-y-2">
             <Label htmlFor="beerName">Beer Name</Label>
-            <Input id="beerName" {...form.register("beerName")} placeholder="e.g. Pliny the Elder" />
+            <Input
+              id="beerName"
+              autoCapitalize="words"
+              autoComplete="off"
+              className="h-11 sm:h-10"
+              placeholder="e.g. Pliny the Elder"
+              {...form.register("beerName")}
+            />
             {form.formState.errors.beerName && (
               <p className="text-sm text-destructive">{form.formState.errors.beerName.message}</p>
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="style">Style</Label>
-              <Input id="style" {...form.register("style")} placeholder="e.g. DIPA" />
+              <Input
+                id="style"
+                autoCapitalize="words"
+                autoComplete="off"
+                className="h-11 sm:h-10"
+                placeholder="e.g. DIPA"
+                {...form.register("style")}
+              />
               {form.formState.errors.style && (
                 <p className="text-sm text-destructive">{form.formState.errors.style.message}</p>
               )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="abv">ABV %</Label>
-              <Input id="abv" {...form.register("abv")} placeholder="e.g. 8.0%" />
+              <Input
+                id="abv"
+                inputMode="decimal"
+                autoComplete="off"
+                className="h-11 sm:h-10"
+                placeholder="e.g. 8.0%"
+                {...form.register("abv")}
+              />
               {form.formState.errors.abv && (
                 <p className="text-sm text-destructive">{form.formState.errors.abv.message}</p>
               )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="price">Price</Label>
-              <Input id="price" {...form.register("price")} placeholder="e.g. $8" />
+              <Input
+                id="price"
+                inputMode="decimal"
+                autoComplete="off"
+                className="h-11 sm:h-10"
+                placeholder="e.g. $8"
+                {...form.register("price")}
+              />
               {form.formState.errors.price && (
                 <p className="text-sm text-destructive">{form.formState.errors.price.message}</p>
               )}
             </div>
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+          <DialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full sm:w-auto h-11 sm:h-10"
+              onClick={() => onOpenChange(false)}
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full sm:w-auto h-11 sm:h-10"
+            >
               {isSubmitting ? "Saving..." : beer ? "Update Beer" : "Add Beer"}
             </Button>
           </DialogFooter>
