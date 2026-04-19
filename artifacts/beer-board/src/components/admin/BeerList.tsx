@@ -64,9 +64,13 @@ export function BeerList() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <h2 className="text-xl font-bold text-foreground">Tap List</h2>
-        <Button onClick={() => { setEditingBeer(null); setIsFormOpen(true); }}>
+        <Button
+          size="lg"
+          className="sm:size-default w-full sm:w-auto"
+          onClick={() => { setEditingBeer(null); setIsFormOpen(true); }}
+        >
           Add New Beer
         </Button>
       </div>
@@ -90,54 +94,60 @@ export function BeerList() {
                     <Card
                       ref={provided.innerRef}
                       {...provided.draggableProps}
-                      className={`p-4 flex items-center gap-4 transition-colors ${
+                      className={`p-3 sm:p-4 transition-colors ${
                         snapshot.isDragging ? "bg-accent/10 border-accent/50 shadow-2xl" : "hover:border-border"
-                      } ${!beer.available ? "opacity-60 grayscale" : ""}`}
+                      } ${!beer.available ? "opacity-60" : ""}`}
                     >
-                      <div
-                        {...provided.dragHandleProps}
-                        className="p-2 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        <GripVertical className="w-5 h-5" />
-                      </div>
-                      
-                      <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-bold shrink-0">
-                        {index + 1}
-                      </div>
-
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-baseline gap-2">
-                          <h4 className="font-bold text-lg truncate">{beer.beerName}</h4>
-                          {!beer.available && (
-                            <span className="flex items-center gap-1 text-xs font-semibold bg-destructive/20 text-destructive px-2 py-0.5 rounded">
-                              <EyeOff className="w-3 h-3" /> Hidden
-                            </span>
-                          )}
+                      <div className="flex items-start gap-2 sm:gap-3">
+                        <div
+                          {...provided.dragHandleProps}
+                          className="p-2 -m-1 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors touch-none shrink-0"
+                          aria-label="Drag to reorder"
+                        >
+                          <GripVertical className="w-5 h-5" />
                         </div>
-                        <p className="text-sm text-muted-foreground truncate">
-                          {beer.brewery} • {beer.style} • {beer.abv}
-                        </p>
+
+                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-secondary flex items-center justify-center font-bold text-sm sm:text-base shrink-0">
+                          {index + 1}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <h4 className="font-bold text-base sm:text-lg leading-tight break-words">{beer.beerName}</h4>
+                            <div className="font-bold text-base sm:text-lg shrink-0">{beer.price}</div>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-0.5 break-words">
+                            {beer.brewery}
+                          </p>
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
+                            <span className="text-xs sm:text-sm text-muted-foreground">
+                              {beer.style} • {beer.abv}
+                            </span>
+                            {!beer.available && (
+                              <span className="inline-flex items-center gap-1 text-xs font-semibold bg-destructive/20 text-destructive px-2 py-0.5 rounded">
+                                <EyeOff className="w-3 h-3" /> Hidden
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="text-right shrink-0 px-4">
-                        <div className="font-bold text-lg">{beer.price}</div>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0 border-l pl-4 border-border/50">
+                      <div className="flex gap-2 mt-3 pt-3 border-t border-border/50">
                         <Button
-                          variant="ghost"
-                          size="icon"
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 h-10"
                           onClick={() => { setEditingBeer(beer); setIsFormOpen(true); }}
                         >
-                          <Edit2 className="w-4 h-4" />
+                          <Edit2 className="w-4 h-4 mr-2" /> Edit
                         </Button>
                         <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-destructive hover:bg-destructive/10"
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 h-10 text-destructive hover:bg-destructive/10 hover:text-destructive"
                           onClick={() => handleDelete(beer.id)}
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-4 h-4 mr-2" /> Delete
                         </Button>
                       </div>
                     </Card>
