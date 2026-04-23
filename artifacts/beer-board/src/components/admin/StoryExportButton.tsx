@@ -184,13 +184,13 @@ export function StoryExportButton() {
         onClick={handleOpen}
       >
         <Camera className="w-4 h-4 sm:mr-2" />
-        <span className="hidden sm:inline">Story PNG</span>
+        <span className="hidden sm:inline">Screenshot Board</span>
       </Button>
 
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent className="max-w-[300px] p-5">
           <DialogHeader>
-            <DialogTitle>Story PNG</DialogTitle>
+            <DialogTitle>Screenshot Board</DialogTitle>
           </DialogHeader>
 
           {imageUrl ? (
