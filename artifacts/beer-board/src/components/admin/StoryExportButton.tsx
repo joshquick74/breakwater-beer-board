@@ -150,15 +150,16 @@ export function StoryExportButton() {
       <Button
         variant="outline"
         size="sm"
-        className="hidden sm:flex"
         onClick={handleExport}
         disabled={generating}
       >
         {generating
-          ? <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          : <Camera className="w-4 h-4 mr-2" />
+          ? <Loader2 className="w-4 h-4 sm:mr-2 animate-spin" />
+          : <Camera className="w-4 h-4 sm:mr-2" />
         }
-        {generating ? "Generating..." : "Story PNG"}
+        <span className="hidden sm:inline">
+          {generating ? "Generating..." : "Story PNG"}
+        </span>
       </Button>
 
       {/* Off-screen board at Instagram story dimensions (1080×1920) for capture */}
