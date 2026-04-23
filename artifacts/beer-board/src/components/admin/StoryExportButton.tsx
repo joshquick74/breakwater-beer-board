@@ -2,6 +2,7 @@ import { useRef, useState, useCallback, useMemo, useLayoutEffect } from "react";
 import { toPng } from "html-to-image";
 import { useListBeers, useGetSettings } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Camera, Loader2 } from "lucide-react";
 import { useDynamicFonts } from "@/hooks/use-fonts";
 
@@ -96,6 +97,7 @@ export function StoryExportButton() {
   const { data: beers = [] } = useListBeers();
   const { data: settings } = useGetSettings();
   const [generating, setGenerating] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
 
   const breweryFont = settings?.breweryFont || settings?.googleFontBody || "Open Sans";
@@ -134,10 +136,7 @@ export function StoryExportButton() {
     try {
       await document.fonts.ready;
       const dataUrl = await toPng(boardRef.current, { pixelRatio: 1 });
-      const a = document.createElement("a");
-      a.download = `beer-board-story-${new Date().toISOString().slice(0, 10)}.png`;
-      a.href = dataUrl;
-      a.click();
+      setPreviewUrl(dataUrl);
     } catch (err) {
       console.error("Story export failed:", err);
     } finally {
@@ -161,6 +160,25 @@ export function StoryExportButton() {
           {generating ? "Generating..." : "Story PNG"}
         </span>
       </Button>
+
+      <Dialog open={!!previewUrl} onOpenChange={(open) => { if (!open) setPreviewUrl(null); }}>
+        <DialogContent className="max-w-sm w-full">
+          <DialogHeader>
+            <DialogTitle>Story PNG</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground -mt-2">
+            Long press to save on mobile &bull; Right-click to save on desktop
+          </p>
+          {previewUrl && (
+            <img
+              src={previewUrl}
+              alt="Beer board story"
+              className="w-full rounded-lg"
+              style={{ touchAction: "manipulation" }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Off-screen board at Instagram story dimensions (1080×1920) for capture */}
       <div
