@@ -6,6 +6,7 @@ import { BeerList } from "@/components/admin/BeerList";
 import { SettingsForm } from "@/components/admin/SettingsForm";
 import { Button } from "@/components/ui/button";
 import { MonitorPlay, LogOut, Beer, Settings } from "lucide-react";
+import { StoryExportButton } from "@/components/admin/StoryExportButton";
 
 export default function Admin() {
   const [_, setLocation] = useLocation();
@@ -39,8 +40,9 @@ export default function Admin() {
           </div>
           
           <div className="flex items-center gap-3">
-            <Button 
-              variant="outline" 
+            <StoryExportButton />
+            <Button
+              variant="outline"
               size="sm"
               className="hidden sm:flex"
               onClick={() => window.open("/board", "_blank")}

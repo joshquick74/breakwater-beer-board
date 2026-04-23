@@ -76,6 +76,7 @@
     "zod": "catalog:"
   },
   "dependencies": {
-    "@hello-pangea/dnd": "^18.0.1"
+    "@hello-pangea/dnd": "^18.0.1",
+    "html-to-image": "^1.11.13"
   }
 }
